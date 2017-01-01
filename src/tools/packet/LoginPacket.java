@@ -109,7 +109,7 @@ public class LoginPacket {
      */
     public static final byte[] getSecondAuthSuccess(MapleClient c) {
         PacketWriter pw = new PacketWriter();
-        pw.writeShort(SendPacketOpcode.LOGIN_SECOND.getValue());
+        pw.writeShort(SendPacketOpcode.ACCOUNT_INFO.getValue());
         pw.write(0); // request
         pw.writeInt(c.getAccID());
         pw.write(0);
@@ -195,7 +195,7 @@ public class LoginPacket {
 
     public static byte[] enableRecommended(int world) {
         PacketWriter pw = new PacketWriter();
-        pw.writeShort(SendPacketOpcode.ENABLE_RECOMMENDED.getValue());
+        pw.writeShort(SendPacketOpcode.LATEST_CONNECTED_WORLD.getValue());
         pw.writeInt(world);
         return pw.getPacket();
     }
@@ -315,18 +315,6 @@ public class LoginPacket {
         
         pw.writeInt(0); // buy character count?
         pw.writeInt(-1); // event new char job
-        
-        /*
-        pw.writeInt(6111);
-        
-        // Something to do with time.
-        pw.writeInt(0); // hidword
-        pw.writeInt(0); // lodword
-        
-        pw.write(0); // rename count?
-        
-        pw.write(0); // ?
-        */
         
         pw.writeReversedLong(PacketHelper.getTime(System.currentTimeMillis()));
         pw.write(0); // the amount of allowed name changes
