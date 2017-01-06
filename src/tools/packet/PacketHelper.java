@@ -595,6 +595,7 @@ public class PacketHelper {
         
         pw.writeReversedLong(getTime(System.currentTimeMillis())); // account last login
         
+<<<<<<< HEAD
         pw.writeLong(0);
         pw.writeLong(0);
         pw.writeInt(0);
@@ -602,6 +603,19 @@ public class PacketHelper {
         pw.writeInt(0);
         // is this character burning	
         pw.write(0); 
+=======
+        // Character Burning  (?)	
+        pw.write(0); 
+        
+        // v179.2
+        pw.writeInt(0);
+        pw.writeInt(0);
+        pw.writeInt(0);
+        pw.writeInt(0);
+        pw.writeInt(0);
+        pw.writeInt(0);
+        pw.writeInt(0);
+>>>>>>> origin/master
         pw.writeInt(0);
         pw.writeInt(0);
     }
@@ -656,9 +670,8 @@ public class PacketHelper {
 		    totemEquip.put(Byte.valueOf(pos), totem.getValue());
 	    }
 	
-    	// System.out.println("There are " + myEquip.entrySet().size() + " pieces of equipment.");
-	    for (Map.Entry entry : myEquip.entrySet()) {
-	        int weapon = ((Integer) entry.getValue()).intValue();
+	    for (Map.Entry<Byte, Integer> entry : myEquip.entrySet()) {
+	        int weapon = (entry.getValue()).intValue();
 		    if (GameConstants.getWeaponType(weapon) == (second ? MapleWeaponType.LONG_SWORD : MapleWeaponType.BIG_SWORD)) {
 		        continue;
 		    }
@@ -668,16 +681,16 @@ public class PacketHelper {
 	    
 	    pw.write(255);
 	
-	    for (Map.Entry entry : maskedEquip.entrySet()) {
-	        pw.write(((Byte) entry.getKey()).byteValue());
-	        pw.writeInt(((Integer) entry.getValue()).intValue());
+	    for (Map.Entry<Byte, Integer> entry : maskedEquip.entrySet()) {
+	    	pw.write(entry.getKey().byteValue());
+	        pw.writeInt(entry.getValue().intValue());
 	    }
 	    
 	    pw.write(255);
 	
-	    for (Map.Entry entry : totemEquip.entrySet()) {
-	        pw.write(((Byte) entry.getKey()).byteValue());
-	        pw.writeInt(((Integer) entry.getValue()).intValue());
+	    for (Map.Entry<Byte, Integer> entry : totemEquip.entrySet()) {
+	        pw.write(entry.getKey().byteValue());
+	        pw.writeInt(entry.getValue().intValue());
 	    }
 	    
 	    pw.write(255);
@@ -705,14 +718,6 @@ public class PacketHelper {
 	        pw.write(1);
 	    }
 	    
-	    /*
-	     if (JobConstants.isBeastTamer(chr.getJob())) { // tale and ears
-			pw.write(1);
-			pw.writeInt(5010116);
-			pw.write(1);
-			pw.writeInt(5010119);
-		 }
-	     */
 	    pw.write(0); // mixed hair color
 	    pw.write(0); // mixed hair percent
 	}

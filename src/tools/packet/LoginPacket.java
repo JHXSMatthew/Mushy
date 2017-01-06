@@ -316,18 +316,6 @@ public class LoginPacket {
         pw.writeInt(0); // buy character count?
         pw.writeInt(-1); // event new char job
         
-        /*
-        pw.writeInt(6111);
-        
-        // Something to do with time.
-        pw.writeInt(0); // hidword
-        pw.writeInt(0); // lodword
-        
-        pw.write(0); // rename count?
-        
-        pw.write(0); // ?
-        */
-        
         pw.writeReversedLong(PacketHelper.getTime(System.currentTimeMillis()));
         pw.write(0); // the amount of allowed name changes
         pw.write(new byte[5]);
