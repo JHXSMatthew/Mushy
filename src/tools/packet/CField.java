@@ -408,137 +408,104 @@ public class CField {
 		
 		// size (int + int)
 		pw.writeShort(0);
-		
 		pw.writeInt(mc.getClient().getChannel() - 1);
-		
 		// bDev
 		pw.write(0);
-		
 		// wOldDriverID
 		pw.writeInt(0);
-		
 		// Are you logging into the handling? (1), or changing the map? (2)
 		// bPopupDlg
 		pw.write(bCharacterData ? 1 : 2);
-		
 		// ?
 		pw.writeInt(0);
-		
 		// nFieldWidth
 		pw.writeInt(800);
-		
 		// nFieldHeight
 		pw.writeInt(600);
-		
 		// Are you logging into the handling? (1), or changing the map? (0)
 		pw.write(bCharacterData);
-		
 		// size (string (size->string))
 		pw.writeShort(0);
-		
 		if(bCharacterData) {
-			mc.CRand().connectData(pw);
-			
-			PacketHelper.addCharacterInfo(pw, mc);
-			pw.writeInt(0); // log out event
+                    mc.CRand().connectData(pw);
+                    PacketHelper.addCharacterInfo(pw, mc);
+                    pw.writeInt(0); // log out event
+                    pw.writeInt(0);
 		} else {
-			
-			// bUsingBuffProtector (this will call the revive function, upon death.)
-			pw.write(0);
-			
-			pw.writeInt(to.getId());
-			pw.write(spawnPoint);
-			pw.writeInt(mc.getStat().getHp());
-			
-			// (bool (int + int))
-			pw.write(0); 
+                    pw.write(0);// bUsingBuffProtector (this will call the revive function, upon death.)
+                    pw.writeInt(to.getId());
+                    pw.write(spawnPoint);
+                    pw.writeInt(mc.getStat().getHp());
+                    // (bool (int + int))
+                    pw.write(0); 
 		}
-		
 		// set white fade in-and-out
 		pw.write(0);
-		
 		// set overlapping screen animation
 		pw.write(0);
-		
 		// some sort of korean event fame-up
 		pw.writeLong(PacketHelper.getTime(System.currentTimeMillis()));
-		
-		// ?
+		// nMobStatAdjustRate
 		pw.writeInt(0x64);
 		
-		// party map experience.
+		// party map experience. (CFieldCustom::Decode)
 		// bool (int + string(bgm) + int(fieldid))
 		pw.write(0);
 		
-		// bool
+		// CWvsContext::OnInitPvPStat
 		pw.write(0);
 		
-		// ?
+		// bCanNotifyAnnouncedQuest
 		pw.write(1);
 		
-		// bool (int)
+		// bool for CField::DrawStackEventGauge
 		pw.write(0);
 		
 		// bool ((int + byte(size))->(int, int, int))->(long, int, int)
 		boolean starplanet = false;
 		pw.write(0);
 		if (starplanet) {
-			
-			// nRoundID
-			pw.writeInt(0); 
-			
-			// the size, cannot exceed the count of 10
-			pw.write(0); 
-			
-				// anPoint
-				pw.writeInt(0);
-				
-				// anRanking
-				pw.writeInt(0);
-				
-				// atLastCheckRank (timeGetTime - 300000)
-				pw.writeInt(0);
-				
-			// ftShiningStarExpiredTime
-			pw.writeLong(0);
-			
-			//nShiningStarPickedCount
-			pw.writeInt(0);
-			
-			//nRoundStarPoint
-			pw.writeInt(0);
+                    // nRoundID
+                    pw.writeInt(0); 
+                    // the size, cannot exceed the count of 10
+                    pw.write(0); 
+                    // anPoint
+                    pw.writeInt(0);
+                    // anRanking
+                    pw.writeInt(0);
+                    // atLastCheckRank (timeGetTime - 300000)
+                    pw.writeInt(0);
+                    // ftShiningStarExpiredTime
+                    pw.writeLong(0);
+                    //nShiningStarPickedCount
+                    pw.writeInt(0);
+                    //nRoundStarPoint
+                    pw.writeInt(0);
 		}			
 		
 		// bool (int + byte + long)
 		boolean aStarPlanetRoundInfo = false;
 		pw.write(aStarPlanetRoundInfo);
 		if(aStarPlanetRoundInfo) {
-			
-			// nStarPlanetRoundID
-			pw.writeInt(0);
-			
-			// nStarPlanetRoundState
-			pw.write(0);
-			
-			// ftStarPlanetRoundEndDate
-			pw.writeLong(0);
+                    // nStarPlanetRoundID
+                    pw.writeInt(0);
+
+                    // nStarPlanetRoundState
+                    pw.write(0);
+
+                    // ftStarPlanetRoundEndDate
+                    pw.writeLong(0);
 		}
 		
-		// int(size)->(int, string)
+		// CUser::DecodeTextEquipInfo int(size)->(int, string)
 		pw.writeInt(0);
 		
 		// FreezeHotEventInfo
-		
-		// nAccountType
-		pw.write(0);
-		
-		// dwAccountID
-		pw.writeInt(0);
+		pw.write(0);// nAccountType
+		pw.writeInt(0);// // dwAccountID
 		
 		// EventBestFriendInfo
-		
-		// dwEventBestFriendAID
-		pw.writeInt(0);
+		pw.writeInt(0);// dwEventBestFriendAID
 		
 		pw.writeInt(0);
 		

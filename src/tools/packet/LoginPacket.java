@@ -109,7 +109,7 @@ public class LoginPacket {
      */
     public static final byte[] getSecondAuthSuccess(MapleClient c) {
         PacketWriter pw = new PacketWriter();
-        pw.writeShort(SendPacketOpcode.LOGIN_SECOND.getValue());
+        pw.writeShort(SendPacketOpcode.ACCOUNT_INFO.getValue());
         pw.write(0); // request
         pw.writeInt(c.getAccID());
         pw.write(0);
@@ -195,7 +195,7 @@ public class LoginPacket {
 
     public static byte[] enableRecommended(int world) {
         PacketWriter pw = new PacketWriter();
-        pw.writeShort(SendPacketOpcode.ENABLE_RECOMMENDED.getValue());
+        pw.writeShort(SendPacketOpcode.LATEST_CONNECTED_WORLD.getValue());
         pw.writeInt(world);
         return pw.getPacket();
     }

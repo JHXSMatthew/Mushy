@@ -1,5 +1,6 @@
 package client;
 
+import client.MapleStat.ZeroStats;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.io.Serializable;
@@ -2889,6 +2890,11 @@ public class MapleCharacter extends AnimatedMapleMapObject implements Serializab
         return job;
     }
 
+    public ZeroStats getBetaStats() {
+        int flag = 0;
+        return null;
+    }
+    
     public String getJobName(short id) {
         return MapleJob.getName(MapleJob.getById(id));
     }
@@ -4052,7 +4058,7 @@ public class MapleCharacter extends AnimatedMapleMapObject implements Serializab
     public final MapleInventory getInventory(MapleInventoryType type) {
         return inventory[type.ordinal()];
     }
-
+    
     public final MapleInventory[] getInventorys() {
         return inventory;
     }
