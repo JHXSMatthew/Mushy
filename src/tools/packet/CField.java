@@ -72,33 +72,29 @@ public class CField {
 	public static byte[] getServerIP(MapleClient c, int port, int characterid) {
 		PacketWriter pw = new PacketWriter();
 		pw.writeShort(SendPacketOpcode.SERVER_IP.getValue());
-		pw.write(0); // request
+		pw.write(0);
 		pw.write(0); 
 		
-		byte[] svr = new byte[] {8, 31, 99, ((byte) 141)};
-		byte[] chat = new byte[] {8, 31, 99, ((byte) 133)};
+		byte[] serverIp = new byte[] {8, 31, 99, ((byte) 141)};
 		
 		// maple server ip
-		pw.write(svr);
+		pw.write(serverIp);
 		pw.writeShort(port);
 		
-		// chat server ip 
-		pw.write(new byte[4]);
+		pw.writeInt(0);
+		pw.writeShort(0);
+		
+		// Chat Server Ip (Null)
+		pw.write(0);
 		pw.writeShort(0);
 		
 		pw.writeInt(characterid);
 		
-		pw.write(0);
-		
-		// argument ?
 		pw.writeInt(0);
+		pw.writeShort(0);
 		pw.write(0);
 		
-		 // shutdown ? (timestamp)
-		pw.writeLong(PacketHelper.getTime(System.currentTimeMillis()));
-		
-		// pw.write(HexTool.getByteArrayFromHexString("3F 01 00 00 00 C8 00 00"));
-		// pw.write(0);
+		pw.writeLong(1);
 		
 		return pw.getPacket();
 	}
