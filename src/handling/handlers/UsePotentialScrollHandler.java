@@ -8,7 +8,6 @@ import client.inventory.Equip;
 import client.inventory.Item;
 import client.inventory.ItemFlag;
 import client.inventory.MapleInventoryType;
-import constants.GameConstants;
 import handling.PacketHandler;
 import handling.RecvPacketOpcode;
 import server.MapleItemInformationProvider;

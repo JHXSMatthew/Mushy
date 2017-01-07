@@ -113,7 +113,7 @@ public class GMCommand {
         @Override
         public int execute(MapleClient c, String[] splitted) {
             MapleMap map = c.getPlayer().getMap();
-            List<MapleMapObject> players = map.getMapObjectsInRange(c.getPlayer().getPosition(), (double) 25000, Arrays.asList(MapleMapObjectType.PLAYER));
+            List<MapleMapObject> players = map.getMapObjectsInRange(c.getPlayer().getPosition(), 25000, Arrays.asList(MapleMapObjectType.PLAYER));
             for (MapleMapObject closeplayers : players) {
                 MapleCharacter playernear = (MapleCharacter) closeplayers;
                 if (playernear.isAlive() && playernear != c.getPlayer() && playernear.getJob() != 910) {

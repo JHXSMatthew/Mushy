@@ -566,7 +566,7 @@ public class MapleItemInformationProvider {
     }
 
     protected int rand(int min, int max) {
-        return Math.abs((int) Randomizer.rand(min, max));
+        return Math.abs(Randomizer.rand(min, max));
     }
 
     public Equip levelUpEquip(Equip equip, Map<String, Integer> sta) {

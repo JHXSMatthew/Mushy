@@ -3,7 +3,6 @@ package constants;
 import client.inventory.EnhanceStat;
 import client.inventory.Equip;
 import client.inventory.EquipStat;
-import client.inventory.MapleInventory;
 import server.MapleItemInformationProvider;
 import tools.Triple;
 

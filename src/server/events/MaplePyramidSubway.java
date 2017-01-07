@@ -61,7 +61,8 @@ public class MaplePyramidSubway {
             commenceTimerNextMap(c, 1);
             energyBarDecrease = MapTimer.getInstance().register(new Runnable() {
 
-                public void run() {
+                @Override
+				public void run() {
                     energybar -= (c.getParty() != null && c.getParty().getMembers().size() > 1 ? 5 : 2);
                     if (broaded) {
                         //broadcastUpdate(c);

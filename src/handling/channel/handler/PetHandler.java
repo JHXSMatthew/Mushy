@@ -100,7 +100,7 @@ public class PetHandler {
         if (petCommand == null) {
             return;
         }
-        byte petIndex = (byte) chr.getPetIndex(pet);
+        byte petIndex = chr.getPetIndex(pet);
         boolean success = false;
         if (Randomizer.nextInt(99) <= petCommand.getProbability()) {
             success = true;

@@ -311,7 +311,7 @@ public class CaltechEval {
             tokens = reduceTokens(tokens);
         }
 
-        return D.parseDouble((String) tokens.elementAt(0));
+        return Double.parseDouble((String) tokens.elementAt(0));
 
     }
 

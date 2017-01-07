@@ -8,8 +8,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
-
 import client.MapleBuffStat;
 import client.MapleBuffStatValueHolder;
 import client.MapleCharacter;
@@ -51,10 +49,8 @@ import server.shops.MapleShop;
 import tools.AttackPair;
 import tools.HexTool;
 import tools.Pair;
-import tools.Randomizer;
 import tools.Triple;
 import tools.data.PacketWriter;
-import tools.packet.twostate.TSIndex;
 
 public class CField {
 

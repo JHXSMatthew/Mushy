@@ -239,17 +239,17 @@ public class RangedAttackHandler {
 		int projectile = 0;
 		int visProjectile = 0;
 		if ((!AOE) && (c.getPlayer().getBuffedValue(MapleBuffStat.SoulArrow) == null) && (!noBullet)) {
-			Item ipp = c.getPlayer().getInventory(MapleInventoryType.USE).getItem((short) attack.slot);
+			Item ipp = c.getPlayer().getInventory(MapleInventoryType.USE).getItem(attack.slot);
 			if (ipp == null) {
 				return;
 			}
 			projectile = ipp.getItemId();
 
 			if (attack.csstar > 0) {
-				if (c.getPlayer().getInventory(MapleInventoryType.CASH).getItem((short) attack.csstar) == null) {
+				if (c.getPlayer().getInventory(MapleInventoryType.CASH).getItem(attack.csstar) == null) {
 					return;
 				}
-				visProjectile = c.getPlayer().getInventory(MapleInventoryType.CASH).getItem((short) attack.csstar).getItemId();
+				visProjectile = c.getPlayer().getInventory(MapleInventoryType.CASH).getItem(attack.csstar).getItemId();
 			} else {
 				visProjectile = projectile;
 			}

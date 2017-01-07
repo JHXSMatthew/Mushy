@@ -216,7 +216,7 @@ public class MapleSnowball extends MapleEvent {
 
                             for (MapleCharacter chrz : chr.getMap().getCharacters()) {
                                 if ((team == 0 && chrz.getTruePosition().y > -80) || (team == 1 && chrz.getTruePosition().y <= -80)) { //winner
-                                    MapleSnowball.givePrize(chrz);
+                                    MapleEvent.givePrize(chrz);
                                 }
                                 sb.warpBack(chrz);
                             }

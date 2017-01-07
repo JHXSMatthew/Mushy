@@ -589,7 +589,7 @@ public class MobPacket {
 
 		pw.writeShort(SendPacketOpcode.APPLY_MONSTER_STATUS.getValue());
 		pw.writeInt(mons.getObjectId());
-		MonsterStatusEffect ms = (MonsterStatusEffect) mse.get(0);
+		MonsterStatusEffect ms = mse.get(0);
 		if (ms.getStati() == MonsterStatus.POISON) {
 			PacketHelper.writeSingleMask(pw, MonsterStatus.EMPTY);
 			pw.write(mse.size());

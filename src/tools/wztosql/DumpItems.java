@@ -173,14 +173,14 @@ public class DumpItems {
             try {
                 pEntry = MapleDataTool.getDouble(pData);
             } catch (Exception e) {
-                pEntry = (double) MapleDataTool.getIntConvert(pData, -1);
+                pEntry = MapleDataTool.getIntConvert(pData, -1);
             }
         } else {
             pData = iz.getChildByPath("info/price");
             if (pData == null) {
                 pEntry = -1.0;
             } else {
-                pEntry = (double) MapleDataTool.getIntConvert(pData, -1);
+                pEntry = MapleDataTool.getIntConvert(pData, -1);
             }
         }
         if (id == 2070019 || id == 2330007) {

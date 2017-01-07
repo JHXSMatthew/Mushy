@@ -1133,7 +1133,7 @@ public class DamageParse {
 	public static AttackInfo parseCloseRangeAttack(LittleEndianAccessor lea, MapleCharacter chr, boolean energy) {
 		AttackInfo ai = new AttackInfo();
 		lea.skip(1); // bFieldKey
-		ai.nMobCount = (int) lea.readByte();
+		ai.nMobCount = lea.readByte();
 		ai.skillid = lea.readInt();
 		byte skillLevel = lea.readByte();
 
@@ -1328,7 +1328,7 @@ public class DamageParse {
 	public static AttackInfo parseMagicAttack(LittleEndianAccessor lea) {
 		AttackInfo ai = new AttackInfo();
 		lea.skip(1); // bFieldKey
-		ai.nMobCount = (int) lea.readByte();
+		ai.nMobCount = lea.readByte();
 		ai.skillid = lea.readInt();
 		byte skillLevel = lea.readByte();
 		
@@ -1481,7 +1481,7 @@ public class DamageParse {
 		AttackInfo ai = new AttackInfo();
 		lea.skip(1);
 		lea.skip(1); // bFieldKey
-		ai.nMobCount = (int) lea.readByte();
+		ai.nMobCount = lea.readByte();
 		ai.skillid = lea.readInt();
 		byte skillLevel = lea.readByte();
 		byte bAddAttackProc = lea.readByte();

@@ -88,7 +88,7 @@ public class ByteArrayByteStream implements SeekableInputStreamBytestream {
     @Override
     public int readByte() {
         bytesRead++;
-        return ((int) arr[pos++]) & 0xFF;
+        return (arr[pos++]) & 0xFF;
     }
 
     /**

@@ -8,7 +8,6 @@ import java.util.Properties;
 
 import org.flywaydb.core.Flyway;
 
-import client.SkillFactory;
 import client.inventory.MapleInventoryIdentifier;
 import constants.GameConstants;
 import constants.ServerConfig;

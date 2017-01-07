@@ -29,6 +29,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.SimpleTimeZone;
+import java.util.TimeZone;
+
 import com.google.common.collect.ArrayListMultimap;
 
 import client.InnerSkillValueHolder;
@@ -65,10 +67,8 @@ import server.shops.MapleShopItem;
 import server.stores.AbstractPlayerStore;
 import server.stores.IMaplePlayerShop;
 import tools.BitTools;
-import tools.HexTool;
 import tools.KoreanDateUtil;
 import tools.Pair;
-import tools.Randomizer;
 import tools.StringUtil;
 import tools.Triple;
 import tools.data.PacketWriter;
@@ -112,7 +112,7 @@ public class PacketHelper {
     }
 
     public static long getFileTimestamp(long timeStampinMillis, boolean roundToMinutes) {
-        if (SimpleTimeZone.getDefault().inDaylightTime(new Date())) {
+        if (TimeZone.getDefault().inDaylightTime(new Date())) {
             timeStampinMillis -= 3600000L;
         }
         long time;
@@ -178,11 +178,11 @@ public class PacketHelper {
         
         for (Map.Entry<Skill, SkillEntry> skill : skills.entrySet()) {
             pw.writeInt(skill.getKey().getId());
-            pw.writeInt(((SkillEntry) skill.getValue()).skillevel);
-            addExpirationTime(pw, ((SkillEntry) skill.getValue()).expiration);
+            pw.writeInt(skill.getValue().skillevel);
+            addExpirationTime(pw, skill.getValue().expiration);
 
-            if (((Skill) skill.getKey()).isFourthJob()) {
-               pw.writeInt(((SkillEntry) skill.getValue()).masterlevel);
+            if (skill.getKey().isFourthJob()) {
+               pw.writeInt(skill.getValue().masterlevel);
             }
         }
         
@@ -595,15 +595,7 @@ public class PacketHelper {
         
         pw.writeReversedLong(getTime(System.currentTimeMillis())); // account last login
         
-<<<<<<< HEAD
-        pw.writeLong(0);
-        pw.writeLong(0);
-        pw.writeInt(0);
-        pw.writeInt(0);
-        pw.writeInt(0);
-        // is this character burning	
-        pw.write(0); 
-=======
+
         // Character Burning  (?)	
         pw.write(0); 
         
@@ -615,7 +607,6 @@ public class PacketHelper {
         pw.writeInt(0);
         pw.writeInt(0);
         pw.writeInt(0);
->>>>>>> origin/master
         pw.writeInt(0);
         pw.writeInt(0);
     }
@@ -675,8 +666,8 @@ public class PacketHelper {
 		    if (GameConstants.getWeaponType(weapon) == (second ? MapleWeaponType.LONG_SWORD : MapleWeaponType.BIG_SWORD)) {
 		        continue;
 		    }
-		    pw.write(((Byte) entry.getKey()).byteValue());
-		    pw.writeInt(((Integer) entry.getValue()).intValue());
+		    pw.write(entry.getKey().byteValue());
+		    pw.writeInt(entry.getValue().intValue());
 	    }
 	    
 	    pw.write(255);

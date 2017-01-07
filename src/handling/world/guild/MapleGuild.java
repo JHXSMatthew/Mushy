@@ -744,9 +744,9 @@ public class MapleGuild implements java.io.Serializable {
             if (mgc.isOnline()) {
                 World.Guild.setGuildAndRank(mgc.getId(), this.id, mgc.getGuildRank(), mgc.getGuildContribution(), newRank);
             } else {
-                setOfflineGuildStatus(this.id, (byte) mgc.getGuildRank(), mgc.getGuildContribution(), (byte) newRank, mgc.getId());
+                setOfflineGuildStatus(this.id, mgc.getGuildRank(), mgc.getGuildContribution(), newRank, mgc.getId());
             }
-            mgc.setAllianceRank((byte) newRank);
+            mgc.setAllianceRank(newRank);
         }
         World.Alliance.sendGuild(allianceid);
     }
@@ -759,7 +759,7 @@ public class MapleGuild implements java.io.Serializable {
             if (mgc.isOnline()) {
                 World.Guild.setGuildAndRank(mgc.getId(), this.id, mgc.getGuildRank(), mgc.getGuildContribution(), newRank);
             } else {
-                setOfflineGuildStatus(this.id, (byte) mgc.getGuildRank(), mgc.getGuildContribution(), (byte) newRank, mgc.getId());
+                setOfflineGuildStatus(this.id, mgc.getGuildRank(), mgc.getGuildContribution(), (byte) newRank, mgc.getId());
             }
             mgc.setAllianceRank((byte) newRank);
         }
@@ -775,7 +775,7 @@ public class MapleGuild implements java.io.Serializable {
                 if (mgc.isOnline()) {
                     World.Guild.setGuildAndRank(cid, this.id, mgc.getGuildRank(), mgc.getGuildContribution(), newRank);
                 } else {
-                    setOfflineGuildStatus(this.id, (byte) mgc.getGuildRank(), mgc.getGuildContribution(), (byte) newRank, cid);
+                    setOfflineGuildStatus(this.id, mgc.getGuildRank(), mgc.getGuildContribution(), (byte) newRank, cid);
                 }
                 mgc.setAllianceRank((byte) newRank);
                 World.Alliance.sendGuild(allianceid);
@@ -817,7 +817,7 @@ public class MapleGuild implements java.io.Serializable {
                 if (mgc.isOnline()) {
                     World.Guild.setGuildAndRank(cid, this.id, newRank, mgc.getGuildContribution(), mgc.getAllianceRank());
                 } else {
-                    setOfflineGuildStatus(this.id, (byte) newRank, mgc.getGuildContribution(), (byte) mgc.getAllianceRank(), cid);
+                    setOfflineGuildStatus(this.id, (byte) newRank, mgc.getGuildContribution(), mgc.getAllianceRank(), cid);
                 }
                 mgc.setGuildRank((byte) newRank);
                 broadcast(GuildPacket.changeRank(mgc));
@@ -944,7 +944,7 @@ public class MapleGuild implements java.io.Serializable {
                 if (mg.isOnline()) {
                     World.Guild.setGuildAndRank(cid, this.id, mg.getGuildRank(), mg.getGuildContribution(), mg.getAllianceRank());
                 } else {
-                    setOfflineGuildStatus(this.id, (byte) mg.getGuildRank(), mg.getGuildContribution(), (byte) mg.getAllianceRank(), cid);
+                    setOfflineGuildStatus(this.id, mg.getGuildRank(), mg.getGuildContribution(), mg.getAllianceRank(), cid);
                 }
                 broadcast(GuildPacket.guildContribution(id, cid, mg.getGuildContribution()));
             }

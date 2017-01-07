@@ -133,8 +133,8 @@ public class PlayerNPC extends MapleNPC implements MapleCharacterLook {
         setSecondHair(chr.getHair());
         setFace(chr.getFace());
         setSecondFace(chr.getFace());
-        setSkin((byte) (chr.getSkinColor()));
-        setSecondSkin((byte) (chr.getSkinColor()));
+        setSkin((chr.getSkinColor()));
+        setSecondSkin((chr.getSkinColor()));
         setGender(chr.getGender());
         setSecondGender(chr.getGender());
         setPets(chr.getPets());

@@ -1,7 +1,6 @@
 package tools.packet;
 
 import client.inventory.*;
-import handling.PacketHandler;
 import handling.SendPacketOpcode;
 import tools.data.PacketWriter;
 

@@ -99,7 +99,7 @@ public class MapleShop {
             x++;
         }
         if (index >= 0) {
-            Item i = (Item) c.getPlayer().getRebuy().get(index);
+            Item i = c.getPlayer().getRebuy().get(index);
             int price = (int) Math.max(Math.ceil(ii.getPrice(itemId) * (GameConstants.isRechargable(itemId) ? 1 : i.getQuantity())), 0.0D);
             if ((price >= 0) && (c.getPlayer().getMeso() >= price)) {
                 if (MapleInventoryManipulator.checkSpace(c, itemId, i.getQuantity(), i.getOwner())) {
@@ -129,7 +129,7 @@ public class MapleShop {
                 boolean passed = true;
                 int y = 0;
                 for (Pair<Integer, String> i : getRanks()) {
-                    if ((c.getPlayer().haveItem(((Integer) i.left).intValue(), 1, true, true)) && (item.getRank() >= y)) {
+                    if ((c.getPlayer().haveItem(i.left.intValue(), 1, true, true)) && (item.getRank() >= y)) {
                         passed = true;
                         break;
                     }
@@ -181,7 +181,7 @@ public class MapleShop {
         if ((quantity == 65535) || (quantity == 0)) {
             quantity = 1;
         }
-        Item item = c.getPlayer().getInventory(type).getItem((short) slot);
+        Item item = c.getPlayer().getInventory(type).getItem(slot);
         if (item == null) {
             return;
         }
@@ -220,7 +220,7 @@ public class MapleShop {
             } else {
                 c.getPlayer().getRebuy().add(item.copyWithQuantity(quantity));
             }
-            MapleInventoryManipulator.removeFromSlot(c, type, (short) slot, quantity, false);
+            MapleInventoryManipulator.removeFromSlot(c, type, slot, quantity, false);
             double price;
             
             if ((GameConstants.isThrowingStar(item.getItemId())) || (GameConstants.isBullet(item.getItemId()))) {
@@ -238,7 +238,7 @@ public class MapleShop {
     }
 
     public void recharge(MapleClient c, byte slot) {
-        Item item = c.getPlayer().getInventory(MapleInventoryType.USE).getItem((short) slot);
+        Item item = c.getPlayer().getInventory(MapleInventoryType.USE).getItem(slot);
 
         if ((item == null) || ((!GameConstants.isThrowingStar(item.getItemId())) && (!GameConstants.isBullet(item.getItemId())))) {
             return;
@@ -306,13 +306,13 @@ public class MapleShop {
             while (rs.next()) {
                 if (ii.itemExists(rs.getInt("itemid"))) {
                     if ((GameConstants.isThrowingStar(rs.getInt("itemid"))) || (GameConstants.isBullet(rs.getInt("itemid")))) {
-                        MapleShopItem starItem = new MapleShopItem((short) rs.getShort("buyable"), ii.getSlotMax(rs.getInt("itemid")), rs.getInt("itemid"), rs.getInt("price"), (short) rs.getInt("position"), rs.getInt("reqitem"), rs.getInt("reqitemq"), rs.getByte("rank"), rs.getInt("category"), rs.getInt("minLevel"), rs.getInt("expiration"), false);
+                        MapleShopItem starItem = new MapleShopItem(rs.getShort("buyable"), ii.getSlotMax(rs.getInt("itemid")), rs.getInt("itemid"), rs.getInt("price"), (short) rs.getInt("position"), rs.getInt("reqitem"), rs.getInt("reqitemq"), rs.getByte("rank"), rs.getInt("category"), rs.getInt("minLevel"), rs.getInt("expiration"), false);
                         ret.addItem(starItem);
                         if (rechargeableItems.contains(Integer.valueOf(starItem.getItemId()))) {
                             recharges.remove(Integer.valueOf(starItem.getItemId()));
                         }
                     } else {
-                        ret.addItem(new MapleShopItem((short) rs.getShort("buyable"), rs.getShort("quantity"), rs.getInt("itemid"), rs.getInt("price"), (short) rs.getInt("position"), rs.getInt("reqitem"), rs.getInt("reqitemq"), rs.getByte("rank"), rs.getInt("category"), rs.getInt("minLevel"), rs.getInt("expiration"), false)); //todo potential
+                        ret.addItem(new MapleShopItem(rs.getShort("buyable"), rs.getShort("quantity"), rs.getInt("itemid"), rs.getInt("price"), (short) rs.getInt("position"), rs.getInt("reqitem"), rs.getInt("reqitemq"), rs.getByte("rank"), rs.getInt("category"), rs.getInt("minLevel"), rs.getInt("expiration"), false)); //todo potential
                     }
                 }
             }
