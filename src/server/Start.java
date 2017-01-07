@@ -8,6 +8,7 @@ import java.util.Properties;
 
 import org.flywaydb.core.Flyway;
 
+import client.SkillFactory;
 import client.inventory.MapleInventoryIdentifier;
 import constants.GameConstants;
 import constants.ServerConfig;
@@ -110,9 +111,10 @@ public class Start extends Properties {
 
         MapleQuest.initQuests();
         MapleItemInformationProvider.getInstance().runEtc();
-//        MapleMonsterInformationProvider.getInstance().load(); // Throws NPE (?)
-//        MapleItemInformationProvider.getInstance().runItems();
-//        SkillFactory.load();
+        MapleMonsterInformationProvider.getInstance().load(); // Throws NPE (?)
+        MapleItemInformationProvider.getInstance().runItems();
+        System.out.println("Loading..");
+        SkillFactory.load();
         LoginInformationProvider.getInstance();
         // RandomRewards.load();
 

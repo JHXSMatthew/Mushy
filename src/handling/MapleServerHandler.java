@@ -124,11 +124,12 @@ public class MapleServerHandler extends IoHandlerAdapter {
 		super.sessionClosed(session);
 	}
 
+    //TODO Idle Time Needs Increase.
     @Override
     public void sessionIdle(final IoSession session, final IdleStatus status) throws Exception {
         MapleClient client = (MapleClient) session.getAttribute(MapleClient.CLIENT_KEY);
         if (client != null) {
-            	client.sendPing();
+            	//client.sendPing();
         }
         super.sessionIdle(session, status);
     }
