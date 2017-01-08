@@ -7049,7 +7049,8 @@ public class MapleCharacter extends AnimatedMapleMapObject implements Serializab
                 default:
                     return;
             }
-            final List<Pair<String, Pair<String, Integer>>> questInfo = MapleQuest.getInstance(questid).getInfoByRank(newRank);
+            @SuppressWarnings("deprecation")
+			final List<Pair<String, Pair<String, Integer>>> questInfo = MapleQuest.getInstance(questid).getInfoByRank(newRank);
             if (questInfo == null) {
                 return;
             }

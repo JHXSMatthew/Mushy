@@ -36,7 +36,6 @@ import tools.packet.CWvsContext;
 
 public class DamageParse {
 
-	@SuppressWarnings("empty-statement")
 	public static void applyAttack(AttackInfo attack, Skill theSkill, MapleCharacter player, int attackCount,
 			double maxDamagePerMonster, MapleStatEffect effect, AttackType attack_type) {
 		if (attack.getSkillId() != 0) {
@@ -155,12 +154,10 @@ public class DamageParse {
 				}
 				byte overallAttackCount = 0;
 
-				int criticals = 0;
-				for (Pair eachde : oned.attack) {
+				for (Pair<?, ?> eachde : oned.attack) {
 					Integer eachd = (Integer) eachde.left;
 					overallAttackCount = (byte) (overallAttackCount + 1);
 					if (((Boolean) eachde.right).booleanValue()) {
-						criticals++;
 					}
 					if ((useAttackCount) && (overallAttackCount - 1 == attackCount)) {
 						maxDamagePerHit = maxDamagePerHit / 100.0D * (ShdowPartnerAttackPercentage
@@ -426,9 +423,9 @@ public class DamageParse {
 						}
 					}
 					if ((effect != null) && (effect.getMonsterStati().size() > 0) && (effect.makeChanceResult())) {
-						for (Map.Entry z : effect.getMonsterStati().entrySet()) {
+						for (Map.Entry<MonsterStatus,Integer> z : effect.getMonsterStati().entrySet()) {
 							monster.applyStatus(player,
-									new MonsterStatusEffect((MonsterStatus) z.getKey(), (Integer) z.getValue(),
+									new MonsterStatusEffect(z.getKey(), z.getValue(),
 											theSkill.getId(), null, false),
 									effect.isPoison(), effect.getDuration(), true, effect);
 						}
@@ -491,38 +488,16 @@ public class DamageParse {
 		}
 		if ((attack.getSkillId() != 0) && ((attack.getTargets() > 0) || ((attack.getSkillId() != 4331003) && (attack.getSkillId() != 4341002)))
 				&& (!GameConstants.isNoDelaySkill(attack.getSkillId()))) {
-			boolean applyTo = effect.applyTo(player, attack.position);
+			effect.applyTo(player, attack.position);
 		}
 		if (player.getSkillLevel(4100011) > 0) {
 			MapleStatEffect eff = SkillFactory.getSkill(4100011).getEffect(player.getSkillLevel(4100011));
 			if (eff.makeChanceResult()) {
-				for (Map.Entry z : effect.getMonsterStati().entrySet()) {
+				for (Map.Entry<MonsterStatus,Integer> z : effect.getMonsterStati().entrySet()) {
 					for (AttackPair ap : attack.allDamage) {
 						final MapleMonster monster = player.getMap().getMonsterByOid(ap.objectid);
-						// monster.applyStatus(player, new
-						// MonsterStatusEffect((MonsterStatus)z.getKey(),
-						// (Integer)z.getValue(), theSkill.getId(), null,
-						// false), effect.isPoison(), effect.getDuration(),
-						// true, effect);
-						// }
-
-						// MonsterStatusEffect monsterStatusEffect = new
-						// MonsterStatusEffect(Collections.singletonMap(MonsterStatus.POISON,
-						// eff.getSkillStats().getStats("dot")),
-						// SkillFactory.getSkill(4100011), null, false);
-						// monsterStatusEffect.setOwnerId(player.getId());
-						// //cidê°€ ë§žì•„ì•¼ ë³´ì�´ë¯€ë¡œ
-						// monster.applyStatus(player, new
-						// MonsterStatusEffect(Collections.singletonMap(MonsterStatus.POISON,
-						// eff.getourceId().getStats("dot")),
-						// SkillFactory.getSkill(4100011), null, false), true,
-						// eff.getDuration(), false);
-						// monster.applyStatus(player, new
-						// MonsterStatusEffect(MonsterStatus.POISON,
-						// Integer.valueOf(eff.getX()), eff.getSourceId(), null,
-						// false), false, eff.getY() * 1000, true, eff);
 						monster.applyStatus(player,
-								new MonsterStatusEffect((MonsterStatus) z.getKey(), (Integer) z.getValue(),
+								new MonsterStatusEffect(z.getKey(), z.getValue(),
 										theSkill.getId(), null, false),
 								effect.isPoison(), effect.getDuration(), true, effect);
 					}
@@ -568,7 +543,6 @@ public class DamageParse {
 		}
 	}
 
-	@SuppressWarnings("empty-statement")
 	public static final void applyAttackMagic(AttackInfo attack, Skill theSkill, MapleCharacter player,
 			MapleStatEffect effect, double maxDamagePerHit) {
 
@@ -631,7 +605,7 @@ public class DamageParse {
 				}
 				byte overallAttackCount = 0;
 
-				for (Pair eachde : oned.attack) {
+				for (Pair<Integer, Boolean> eachde : oned.attack) {
 					Integer eachd = (Integer) eachde.left;
 					overallAttackCount = (byte) (overallAttackCount + 1);
 					if (fixeddmg != -1) {
@@ -829,6 +803,8 @@ public class DamageParse {
 				return elemMaxDamagePerMob / 100.0D * (stats.element_light + stats.getElementBoost(elem));
 			case POISON:
 				return elemMaxDamagePerMob / 100.0D * (stats.element_psn + stats.getElementBoost(elem));
+		default:
+			break;
 		}
 		return elemMaxDamagePerMob / 100.0D * (stats.def + stats.getElementBoost(elem));
 	}
@@ -836,8 +812,8 @@ public class DamageParse {
 	private static void handlePickPocket(MapleCharacter player, MapleMonster mob, AttackPair oned) {
 		int maxmeso = player.getBuffedValue(MapleBuffStat.PickPocket).intValue();
 
-		for (Pair eachde : oned.attack) {
-			Integer eachd = (Integer) eachde.left;
+		for (Pair<Integer, Boolean> eachde : oned.attack) {
+			Integer eachd = eachde.left;
 			if ((player.getStat().pickRate >= 100) || (Randomizer.nextInt(99) < player.getStat().pickRate)) {
 				player.getMap().spawnMesoDrop(
 						Math.min((int) Math.max(eachd.intValue() / 20000.0D * maxmeso, 1.0D), maxmeso),
@@ -867,7 +843,7 @@ public class DamageParse {
 			return 999999.0D;
 		}
 
-		List<Element> elements = new ArrayList();
+		List<Element> elements = new ArrayList<>();
 		boolean defined = false;
 		int CritPercent = CriticalDamagePercent.intValue();
 		int PDRate = monster.getStats().getPDRate();
@@ -1017,6 +993,8 @@ public class DamageParse {
 					case STRONG:
 						elementalMaxDamagePerMonster *= (1.0D - elementalEffect
 								- player.getStat().getElementBoost(element));
+					default:
+						break;
 					}
 
 				}
@@ -1064,17 +1042,16 @@ public class DamageParse {
 		return attack;
 	}
 
-	public static final AttackInfo ModifyAttackCrit(AttackInfo attack, MapleCharacter chr, int type,
-			MapleStatEffect effect) {
+	public static <T> AttackInfo ModifyAttackCrit(AttackInfo attack, MapleCharacter chr, int type, MapleStatEffect effect) {
 		int CriticalRate;
 		boolean shadow;
-		List damages;
-		List damage;
+		
+		List<Integer> damages = new ArrayList<>();
+		List<Integer> damage  = new ArrayList<>();
+		
 		if ((attack.getSkillId() != 4211006) && (attack.getSkillId() != 3211003) && (attack.getSkillId() != 4111004)) {
 			CriticalRate = chr.getStat().passive_sharpeye_rate() + (effect == null ? 0 : effect.getCr());
 			shadow = (chr.getBuffedValue(MapleBuffStat.ShadowPartner) != null) && ((type == 1) || (type == 2));
-			damages = new ArrayList();
-			damage = new ArrayList();
 
 			for (AttackPair p : attack.allDamage) {
 				if (p.attack != null) {
@@ -1085,10 +1062,9 @@ public class DamageParse {
 							|| (attack.getSkillId() == 4341005) || (attack.getSkillId() == 4331006) || (attack.getSkillId() == 21120005)
 									? mid_att : 0;
 					if (toCrit == 0) {
-						for (Pair eachd : p.attack) {
-							if ((!((Boolean) eachd.right).booleanValue()) && (hit < mid_att)) {
-								if ((((Integer) eachd.left).intValue() > 999999)
-										|| (Randomizer.nextInt(100) < CriticalRate)) {
+						for (Pair<Integer, Boolean> eachd : p.attack) {
+							if ((!eachd.right) && (hit < mid_att)) {
+								if ((eachd.left > 999999) || (Randomizer.nextInt(100) < CriticalRate)) {
 									toCrit++;
 								}
 								damage.add(eachd.left);
@@ -1106,8 +1082,8 @@ public class DamageParse {
 						}
 					} else {
 						hit = 0;
-						for (Pair eachd : p.attack) {
-							if (!((Boolean) eachd.right).booleanValue()) {
+						for (Pair<Integer, Boolean> eachd : p.attack) {
+							if (!eachd.right.booleanValue()) {
 								if (attack.getSkillId() == 4221001) {
 									eachd.right = Boolean.valueOf(hit == 3);
 								} else if ((attack.getSkillId() == 3221007) || (attack.getSkillId() == 23121003)
@@ -1115,7 +1091,7 @@ public class DamageParse {
 										|| (attack.getSkillId() == 4331006) || (((Integer) eachd.left).intValue() > 999999)) {
 									eachd.right = Boolean.valueOf(true);
 								} else if (hit >= mid_att) {
-									eachd.right = ((Pair) p.attack.get(hit - mid_att)).right;
+									eachd.right = p.attack.get(hit - mid_att).right;
 								} else {
 									eachd.right = Boolean.valueOf(damages.contains(eachd.left));
 								}
@@ -1135,7 +1111,7 @@ public class DamageParse {
 		lea.skip(1); // bFieldKey
 		ai.nMobCount = lea.readByte();
 		ai.skillid = lea.readInt();
-		byte skillLevel = lea.readByte();
+		lea.skip(1); // bSkillLevel
 
 		if (ai.getTargets() == 0) {
 			parseNormalAttack(lea, ai, chr);
@@ -1330,7 +1306,7 @@ public class DamageParse {
 		lea.skip(1); // bFieldKey
 		ai.nMobCount = lea.readByte();
 		ai.skillid = lea.readInt();
-		byte skillLevel = lea.readByte();
+		lea.skip(1); // bSkillLevel
 		
 		// lea.skip(1); // bAddAttackProc
 		lea.skip(4); // crc
@@ -1427,8 +1403,8 @@ public class DamageParse {
 	        }
 		} else {
 			if (ai.skillid != 32111016) {
-				short nForcedX = lea.readShort();
-				short nForcedY = lea.readShort();
+				lea.readShort(); // X
+				lea.readShort(); // Y
 				
 				boolean dragon = lea.readByte() > 0;
 				if (dragon) {
@@ -1483,8 +1459,8 @@ public class DamageParse {
 		lea.skip(1); // bFieldKey
 		ai.nMobCount = lea.readByte();
 		ai.skillid = lea.readInt();
-		byte skillLevel = lea.readByte();
-		byte bAddAttackProc = lea.readByte();
+		lea.skip(1); // bSkillLevel
+		lea.skip(1); // bAddAttackProc
 		
 		lea.skip(4); // crc
 		
@@ -1524,7 +1500,7 @@ public class DamageParse {
 		ai.speed = lea.readByte();
 		ai.lastAttackTickCount = lea.readInt();
 		lea.skip(4);
-		int finalAttack = lea.readInt();
+		lea.skip(4); // Final Attack
 		ai.slot = ((byte) lea.readShort());
 		ai.csstar = ((byte) lea.readShort());
 		ai.AOE = lea.readByte(); // nShootRange

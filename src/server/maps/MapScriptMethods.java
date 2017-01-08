@@ -3249,25 +3249,6 @@ public class MapScriptMethods {
         }
     }
 
-    private static int getTiming(int ids) {
-        if (ids <= 5) {
-            return 5;
-        } else if (ids >= 7 && ids <= 11) {
-            return 6;
-        } else if (ids >= 13 && ids <= 17) {
-            return 7;
-        } else if (ids >= 19 && ids <= 23) {
-            return 8;
-        } else if (ids >= 25 && ids <= 29) {
-            return 9;
-        } else if (ids >= 31 && ids <= 35) {
-            return 10;
-        } else if (ids >= 37 && ids <= 38) {
-            return 15;
-        }
-        return 0;
-    }
-
     private static int getDojoStageDec(int ids) {
         if (ids <= 5) {
             return 0;
@@ -3464,6 +3445,8 @@ public class MapScriptMethods {
                                 }
                             }, 15000);
                             break;
+					default:
+						break;
                     }
                 }
             }

@@ -1587,7 +1587,7 @@ public class GMCommand {
                 return 0;
             }
             String splitString = StringUtil.joinStringFrom(splitted, 2);
-            List<Integer> chars = new ArrayList();
+            List<Integer> chars = new ArrayList<>();
             splitString = splitString.toUpperCase();
 
             for (int i = 0; i < splitString.length(); ++i) {

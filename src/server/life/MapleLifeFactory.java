@@ -23,7 +23,6 @@ package server.life;
 import java.awt.Point;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;

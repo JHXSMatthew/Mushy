@@ -232,6 +232,8 @@ public class MapleTrade {
                         break;
                     case CASH:
                         cash = (byte) (cash + 1);
+				default:
+					break;
                 }
 
                 if ((ii.isPickupRestricted(item.getItemId())) && (this.chr.get().haveItem(item.getItemId(), 1, true, true))) {
