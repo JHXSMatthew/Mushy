@@ -517,7 +517,7 @@ public class SuperGMCommand {
 
                     toDrop = ii.randomizeStats((Equip) ii.getEquipById(itemId));
                 } else {
-                    toDrop = new client.inventory.Item(itemId, (byte) 0, (short) quantity, (byte) 0);
+                    toDrop = new client.inventory.Item(itemId, (byte) 0, quantity, (byte) 0);
                 }
                 if (!c.getPlayer().isAdmin()) {
                     toDrop.setGMLog(c.getPlayer().getName() + " used !drop");
@@ -549,9 +549,9 @@ public class SuperGMCommand {
                 Item toDrop;
                 if (GameConstants.getInventoryType(itemId) == MapleInventoryType.EQUIP) {
 
-                    toDrop = (Equip) ii.getEquipById(itemId);
+                    toDrop = ii.getEquipById(itemId);
                 } else {
-                    toDrop = new client.inventory.Item(itemId, (byte) 0, (short) quantity, (byte) 0);
+                    toDrop = new client.inventory.Item(itemId, (byte) 0, quantity, (byte) 0);
                 }
                 if (!c.getPlayer().isAdmin()) {
                     toDrop.setGMLog(c.getPlayer().getName() + " used !drop");
@@ -1199,7 +1199,7 @@ public class SuperGMCommand {
         public int execute(MapleClient c, String[] splitted) {
             if (splitted.length > 1) {
                 try {
-                    c.getSession().getHandler().messageReceived(c.getSession(), (Object) CField.getPacketFromHexString(StringUtil.joinStringFrom(splitted, 1)));
+                    c.getSession().getHandler().messageReceived(c.getSession(), CField.getPacketFromHexString(StringUtil.joinStringFrom(splitted, 1)));
                 } catch (Exception e) {
                     c.getPlayer().dropMessage(6, "Error: " + e);
                 }

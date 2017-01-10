@@ -230,7 +230,7 @@ public class MapleLifeFactory {
             if (reviveInfo != null) {
                 List<Integer> revives = new LinkedList<>();
                 for (MapleData bdata : reviveInfo) {
-                    revives.add(MapleDataTool.getInt(bdata));
+                    revives.add(MapleDataTool.getIntConvert(bdata));
                 }
                 stats.setRevives(revives);
             }
@@ -254,14 +254,24 @@ public class MapleLifeFactory {
             if (link != 0) { // Store another copy, for faster processing.
             	monsterData = data.getData(StringUtil.getLeftPaddedStr(link + ".img", '0', 11));
             }
-            for (MapleData idata : monsterData) {
-                switch (idata.getName()) {
-                    case "fly":
-                        stats.setFly(true);
-                        stats.setMobile(true);
-                    case "move":
-                        stats.setMobile(true);
-                        break;
+            if (monsterData != null) {
+                for (MapleData idata : monsterData) {
+                    switch (idata.getName()) {
+                        case "fly":
+                            stats.setFly(true);
+                            stats.setMobile(true);
+                            break;
+                        case "move":
+                            stats.setMobile(true);
+                            break;
+                    }
+                }
+            } else {
+                try {
+                    monsterData = data2.getData(s);
+                } catch(RuntimeException e) {
+                    e.printStackTrace();
+                    return null;
                 }
             }
 

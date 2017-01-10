@@ -148,6 +148,8 @@ public class PlayerCommand {
 				player.setSecondHair(hair);
 				player.updateSingleStat(MapleStat.HAIR, player.getSecondHair());
 				break;
+			default:
+				break;
 			}
 		}
 

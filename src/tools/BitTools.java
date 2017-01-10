@@ -39,7 +39,7 @@ public class BitTools {
     public static final int getShort(final byte array[], final int index) {
         int ret = array[index];
         ret &= 0xFF;
-        ret |= ((int) (array[index + 1]) << 8) & 0xFF00;
+        ret |= ((array[index + 1]) << 8) & 0xFF00;
         return ret;
     }
 
@@ -69,7 +69,7 @@ public class BitTools {
      * @return The string read.
      */
     public static final String getMapleString(final byte array[], final int index) {
-        final int length = ((int) (array[index]) & 0xFF) | ((int) (array[index + 1] << 8) & 0xFF00);
+        final int length = ((array[index]) & 0xFF) | (array[index + 1] << 8 & 0xFF00);
         return BitTools.getString(array, index + 2, length);
     }
 
@@ -85,7 +85,7 @@ public class BitTools {
         /*
          * in: 11001101 count: 3 out: 0110 1110
          */
-        int tmp = (int) in & 0xFF;
+        int tmp = in & 0xFF;
 
         tmp = tmp << (count % 8);
         return (byte) ((tmp & 0xFF) | (tmp >> 8));
@@ -106,7 +106,7 @@ public class BitTools {
          * 0000 1011 1011 0000 0101 1000
          *
          */
-        int tmp = (int) in & 0xFF;
+        int tmp = in & 0xFF;
         tmp = (tmp << 8) >>> (count % 8);
 
         return (byte) ((tmp & 0xFF) | (tmp >>> 8));

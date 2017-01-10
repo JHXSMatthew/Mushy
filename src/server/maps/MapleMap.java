@@ -457,7 +457,7 @@ public final class MapleMap {
         final int cmServerrate = ChannelServer.getInstance(channel).getMesoRate(chr.getWorld());
         final int chServerrate = ChannelServer.getInstance(channel).getDropRate(chr.getWorld());
         final int caServerrate = ChannelServer.getInstance(channel).getCashRate();
-        final int cashz = (int) ((mob.getStats().isBoss() && mob.getStats().getHPDisplayType() == 0 ? 20 : 1) * caServerrate);
+        final int cashz = (mob.getStats().isBoss() && mob.getStats().getHPDisplayType() == 0 ? 20 : 1) * caServerrate;
         final int cashModifier = (int) ((mob.getStats().isBoss() ? (mob.getStats().isPartyBonus() ? (mob.getMobExp() / 1000) : 0) : (mob.getMobExp() / 1000 + mob.getMobMaxHp() / 20000))); //no rate
         Item idrop;
         byte d = 1;
@@ -786,10 +786,10 @@ public final class MapleMap {
             dropFromMonster(drop, monster, instanced);
         }
         final int caServerrate = ChannelServer.getInstance(channel).getCashRate();
-        final int cashz = (int) ((monster.getStats().isBoss() && monster.getStats().getHPDisplayType() == 0 ? 3 : 1) * caServerrate);
-        final int cashModifier = (int) ((monster.getStats().isBoss() ? (monster.getStats().isPartyBonus() ? (Randomizer.nextInt(6)) : (Randomizer.nextInt(2))) : (Randomizer.nextInt(2)))); //no rate
+        final int cashz = (monster.getStats().isBoss() && monster.getStats().getHPDisplayType() == 0 ? 3 : 1) * caServerrate;
+        final int cashModifier = ((monster.getStats().isBoss() ? (monster.getStats().isPartyBonus() ? (Randomizer.nextInt(6)) : (Randomizer.nextInt(2))) : (Randomizer.nextInt(2)))); //no rate
         if (Randomizer.nextInt(100) < ServerConfig.CASH_DROP_RATE) { //kill nx
-            chr.modifyCSPoints(1, (int) ((Randomizer.nextInt(cashz) + cashz + cashModifier) * (Randomizer.nextInt(2)) * chr.getCashMod()), true);
+            chr.modifyCSPoints(1, (Randomizer.nextInt(cashz) + cashz + cashModifier) * (Randomizer.nextInt(2)) * chr.getCashMod(), true);
         }
     }
 
@@ -1026,7 +1026,7 @@ public final class MapleMap {
         mapobjectlocks.get(MapleMapObjectType.REACTOR).readLock().lock();
         try {
             for (MapleMapObject obj : mapobjects.get(MapleMapObjectType.REACTOR).values()) {
-                ((MapleReactor) obj).forceHitReactor((byte) state);
+                ((MapleReactor) obj).forceHitReactor(state);
             }
         } finally {
             mapobjectlocks.get(MapleMapObjectType.REACTOR).readLock().unlock();

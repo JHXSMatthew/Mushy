@@ -65,7 +65,7 @@ public class MapleFoothold implements Comparable<MapleFoothold> {
 
     @Override
     public int compareTo(MapleFoothold o) {
-        MapleFoothold other = (MapleFoothold) o;
+        MapleFoothold other = o;
         if (p2.y < other.getY1()) {
             return -1;
         } else if (p1.y > other.getY2()) {

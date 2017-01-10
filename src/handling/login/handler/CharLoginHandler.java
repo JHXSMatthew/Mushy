@@ -21,7 +21,6 @@ import handling.login.LoginInformationProvider.JobType;
 import server.MapleItemInformationProvider;
 import server.quest.MapleQuest;
 import tools.data.LittleEndianAccessor;
-import tools.data.input.SeekableLittleEndianAccessor;
 import tools.packet.CField;
 import tools.packet.LoginPacket;
 
@@ -79,7 +78,7 @@ public class CharLoginHandler {
 
         MapleCharacter newchar = MapleCharacter.getDefault(c, jobType);
         newchar.setJob(job);
-        newchar.setWorld((byte) c.getPlayer().getWorld());
+        newchar.setWorld(c.getPlayer().getWorld());
         newchar.setFace(face);
         newchar.setHair(hair);
         newchar.setGender(gender);

@@ -20,14 +20,14 @@ public class MapleShopFactory {
 
     public MapleShop getShop(int shopId) {
         if (this.shops.containsKey(Integer.valueOf(shopId))) {
-            return (MapleShop) this.shops.get(Integer.valueOf(shopId));
+            return this.shops.get(Integer.valueOf(shopId));
         }
         return loadShop(shopId, true);
     }
 
     public MapleShop getShopForNPC(int npcId) {
         if (this.npcShops.containsKey(Integer.valueOf(npcId))) {
-            return (MapleShop) this.npcShops.get(Integer.valueOf(npcId));
+            return this.npcShops.get(Integer.valueOf(npcId));
         }
         return loadShop(npcId, false);
     }

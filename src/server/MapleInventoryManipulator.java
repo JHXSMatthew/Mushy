@@ -137,7 +137,7 @@ public class MapleInventoryManipulator {
                     Iterator<Item> i = existing.iterator();
                     while (quantity > 0) {
                         if (i.hasNext()) {
-                            Item eItem = (Item) i.next();
+                            Item eItem = i.next();
                             short oldQ = eItem.getQuantity();
                             if (oldQ < slotMax && (eItem.getOwner().equals(owner) || owner == null) && eItem.getExpiration() == -1) {
                                 short newQ = (short) Math.min(oldQ + quantity, slotMax);
@@ -260,7 +260,7 @@ public class MapleInventoryManipulator {
                     Iterator<Item> i = existing.iterator();
                     while (quantity > 0) {
                         if (i.hasNext()) {
-                            nItem = (Item) i.next();
+                            nItem = i.next();
                             short oldQ = nItem.getQuantity();
 
                             if (oldQ < slotMax) {
@@ -360,7 +360,7 @@ public class MapleInventoryManipulator {
                     Iterator<Item> i = existing.iterator();
                     while (quantity > 0) {
                         if (i.hasNext()) {
-                            final Item eItem = (Item) i.next();
+                            final Item eItem = i.next();
                             final short oldQ = eItem.getQuantity();
                             if (oldQ < slotMax && item.getOwner().equals(eItem.getOwner()) && item.getExpiration() == eItem.getExpiration()) {
                                 final short newQ = (short) Math.min(oldQ + quantity, slotMax);
@@ -522,7 +522,7 @@ public class MapleInventoryManipulator {
             if (item.getQuantity() == 0 && !allowZero) {
                 c.getSession().write(InventoryPacket.clearInventoryItem(type, item.getPosition(), fromDrop));
             } else {
-                c.getSession().write(InventoryPacket.updateInventorySlot(type, (Item) item, fromDrop));
+                c.getSession().write(InventoryPacket.updateInventorySlot(type, item, fromDrop));
             }
             return true;
         }
@@ -637,7 +637,7 @@ public class MapleInventoryManipulator {
             if ((olddstQ + oldsrcQ) > slotMax) {
                 c.getSession().write(InventoryPacket.moveAndMergeWithRestInventoryItem(type, src, dst, (short) ((olddstQ + oldsrcQ) - slotMax), slotMax, bag, switchSrcDst, bothBag));
             } else {
-                c.getSession().write(InventoryPacket.moveAndMergeInventoryItem(type, src, dst, ((Item) c.getPlayer().getInventory(type).getItem(dst)).getQuantity(), bag, switchSrcDst, bothBag));
+                c.getSession().write(InventoryPacket.moveAndMergeInventoryItem(type, src, dst, c.getPlayer().getInventory(type).getItem(dst).getQuantity(), bag, switchSrcDst, bothBag));
             }
         } else {
             c.getSession().write(InventoryPacket.moveInventoryItem(type, switchSrcDst ? dst : src, switchSrcDst ? src : dst, eqIndicator, bag, bothBag));

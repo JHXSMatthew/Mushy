@@ -30,7 +30,6 @@ import client.MapleClient;
 import client.Skill;
 import client.SkillEntry;
 import client.SkillFactory;
-import constants.GameConstants;
 import script.event.EventManager;
 import script.npc.NPCScriptManager;
 import server.MapleItemInformationProvider;
@@ -44,7 +43,6 @@ import server.maps.MapleNodes.DirectionInfo;
 import server.quest.MapleQuest;
 import server.quest.MapleQuestStatus;
 import server.quest.MapleQuest.MedalQuest;
-import tools.FileoutputUtil;
 import tools.Randomizer;
 import tools.packet.CField;
 import tools.packet.CField.EffectPacket;
@@ -454,7 +452,7 @@ public class MapScriptMethods {
                     c.getPlayer().getMap().startMapEffect("Don't forget that you have to clear it within the time limit! Take down the monster and head to the next floor!", 5120024);
                 }
                 int temp = (c.getPlayer().getMapId() - 925000000) / 100;
-                int stage = (int) (temp - ((temp / 100) * 100));
+                int stage = temp - ((temp / 100) * 100);
 //                String lol = c.getPlayer().getInfoQuest((int)7214);
 //                System.err.println("ol " + lol);
 //                int ad = Integer.parseInt(lol);
@@ -3251,25 +3249,6 @@ public class MapScriptMethods {
         }
     }
 
-    private static int getTiming(int ids) {
-        if (ids <= 5) {
-            return 5;
-        } else if (ids >= 7 && ids <= 11) {
-            return 6;
-        } else if (ids >= 13 && ids <= 17) {
-            return 7;
-        } else if (ids >= 19 && ids <= 23) {
-            return 8;
-        } else if (ids >= 25 && ids <= 29) {
-            return 9;
-        } else if (ids >= 31 && ids <= 35) {
-            return 10;
-        } else if (ids >= 37 && ids <= 38) {
-            return 15;
-        }
-        return 0;
-    }
-
     private static int getDojoStageDec(int ids) {
         if (ids <= 5) {
             return 0;
@@ -3466,6 +3445,8 @@ public class MapScriptMethods {
                                 }
                             }, 15000);
                             break;
+					default:
+						break;
                     }
                 }
             }

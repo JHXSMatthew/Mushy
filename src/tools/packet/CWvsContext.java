@@ -259,10 +259,10 @@ public class CWvsContext {
     	pw.write(remove);
     	pw.writeShort(update.size());
     	update.entrySet().forEach(entry -> {
-    		pw.writeInt(((Skill) entry.getKey()).getId());
-    		pw.writeInt(((SkillEntry) entry.getValue()).skillevel);
-    		pw.writeInt(((SkillEntry) entry.getValue()).masterlevel);
-    		PacketHelper.addExpirationTime(pw, ((SkillEntry) entry.getValue()).expiration);
+    		pw.writeInt(entry.getKey().getId());
+    		pw.writeInt(entry.getValue().skillevel);
+    		pw.writeInt(entry.getValue().masterlevel);
+    		PacketHelper.addExpirationTime(pw, entry.getValue().expiration);
     	});
     	pw.write(0); // pw.write(hyper ? 0x0C : 4); ??????
     	return pw.getPacket();
@@ -614,7 +614,7 @@ public class CWvsContext {
             pw.writeShort(pet.getCloseness());
             pw.write(pet.getFullness());
             pw.writeShort(0);
-            Item inv = chr.getInventory(MapleInventoryType.EQUIPPED).getItem((short) (byte) (index == 2 ? -130 : index == 1 ? -114 : -138));
+            Item inv = chr.getInventory(MapleInventoryType.EQUIPPED).getItem((byte) (index == 2 ? -130 : index == 1 ? -114 : -138));
             pw.writeInt(inv == null ? 0 : inv.getItemId());
             pw.writeInt(-1);//new v140
             pw.write(chr.getSummonedPets().size() > index); //continue loop
@@ -658,15 +658,15 @@ public class CWvsContext {
         pw.writeInt(0);
         pw.writeInt(0);
 
-        List chairs = new ArrayList();
+        List<Integer> chairs = new ArrayList<>();
         for (Item i : chr.getInventory(MapleInventoryType.SETUP).newList()) {
             if ((i.getItemId() / 10000 == 301) && (!chairs.contains(Integer.valueOf(i.getItemId())))) {
                 chairs.add(Integer.valueOf(i.getItemId()));
             }
         }
         pw.writeInt(chairs.size());
-        for (Iterator i$ = chairs.iterator(); i$.hasNext();) {
-            int i = ((Integer) i$.next()).intValue();
+        for (Iterator<Integer> is = chairs.iterator(); is.hasNext();) {
+            int i = is.next().intValue();
             pw.writeInt(i);
         }
 
@@ -830,12 +830,12 @@ public class CWvsContext {
         pw.writeShort(SendPacketOpcode.SERVERMESSAGE.getValue());
         pw.write(10);
         if (message.get(0) != null) {
-            pw.writeMapleAsciiString((String) message.get(0));
+            pw.writeMapleAsciiString(message.get(0));
         }
         pw.write(message.size());
         for (int i = 1; i < message.size(); i++) {
             if (message.get(i) != null) {
-                pw.writeMapleAsciiString((String) message.get(i));
+                pw.writeMapleAsciiString(message.get(i));
             }
         }
         pw.write(channel - 1);
@@ -905,7 +905,7 @@ public class CWvsContext {
         pw.writeInt(size);
         for (HiredMerchant hm : hms) {
             for (Iterator<HiredMerchant> i = hms.iterator(); i.hasNext();) {
-                hm = (HiredMerchant) i.next();
+                hm = i.next();
                 final List<MaplePlayerShopItem> items = hm.searchItem(itemSearch);
                 for (MaplePlayerShopItem item : items) {
                     pw.writeMapleAsciiString(hm.getOwnerName());
@@ -2797,7 +2797,7 @@ public class CWvsContext {
             pw.writeInt(pages);
             
             for (int i = 0; i < pages; i++) {
-                addThread(pw, (MapleBBSThread) bbs.get(start + i));
+                addThread(pw, bbs.get(start + i));
             }
 
             return pw.getPacket();

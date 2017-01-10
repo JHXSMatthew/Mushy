@@ -168,8 +168,8 @@ public class MapleInventory implements Iterable<Item>, Serializable {
     }
 
     public void move(short sSlot, short dSlot, short slotMax) {
-        Item source = (Item) this.inventory.get(Short.valueOf(sSlot));
-        Item target = (Item) this.inventory.get(Short.valueOf(dSlot));
+        Item source = this.inventory.get(Short.valueOf(sSlot));
+        Item target = this.inventory.get(Short.valueOf(dSlot));
         if (source == null) {
             throw new InventoryException("Trying to move empty slot");
         }
@@ -209,7 +209,7 @@ public class MapleInventory implements Iterable<Item>, Serializable {
     }
 
     public Item getItem(short slot) {
-        return (Item) this.inventory.get(slot);
+        return this.inventory.get(slot);
     }
 
     public void removeItem(short slot) {
@@ -217,7 +217,7 @@ public class MapleInventory implements Iterable<Item>, Serializable {
     }
 
     public void removeItem(short slot, short quantity, boolean allowZero) {
-        Item item = (Item) this.inventory.get(Short.valueOf(slot));
+        Item item = this.inventory.get(Short.valueOf(slot));
         if (item == null) {
             return;
         }
@@ -264,7 +264,7 @@ public class MapleInventory implements Iterable<Item>, Serializable {
                 free = (byte) (free + 1);
             }
         }
-        return (short) free;
+        return free;
     }
 
     public MapleInventoryType getType() {

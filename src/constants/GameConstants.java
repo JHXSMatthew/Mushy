@@ -149,7 +149,7 @@ public class GameConstants {
 				exp[i] = exp[i - 1];
 				continue;
 			}
-			exp[i] = (long)((double)exp[i - 1] * (i < 40 ? 1.2 : i < 75 ? 1.08 : i < 160 ? 1.07 : i < 200 ? 1.06 : 1));
+			exp[i] = (long)(exp[i - 1] * (i < 40 ? 1.2 : i < 75 ? 1.08 : i < 160 ? 1.07 : i < 200 ? 1.06 : 1));
 		}
 
 		for (int i = 200; i < 250; i++)
@@ -159,11 +159,11 @@ public class GameConstants {
 				exp[i] = exp[i - 1] * 2;
 				if (i != 200)
 				{
-					exp[i] = (long)((double)exp[i] * (i == 210 ? 1.06 : i == 220 ? 1.04 : i == 230 ? 1.02 : i == 240 ? 1.01 : 1));
+					exp[i] = (long)(exp[i] * (i == 210 ? 1.06 : i == 220 ? 1.04 : i == 230 ? 1.02 : i == 240 ? 1.01 : 1));
 				}
 				continue;
 			}
-			exp[i] = (long)((double)exp[i - 1] * (i < 210 ? 1.2 : i < 220 ? 1.06 : i < 230 ? 1.04 : i < 240 ? 1.02 : i < 250 ? 1.01 : 1));
+			exp[i] = (long)(exp[i - 1] * (i < 210 ? 1.2 : i < 220 ? 1.06 : i < 230 ? 1.04 : i < 240 ? 1.02 : i < 250 ? 1.01 : 1));
 		}
 		exp[250] = 0;
 	}
@@ -219,7 +219,7 @@ public class GameConstants {
 	}
 
 	public static int getBookLevel(final int level) {
-		return (int) ((5 * level) * (level + 1));
+		return (5 * level) * (level + 1);
 	}
 
 	public static int getTimelessRequiredEXP(final int level) {
@@ -4216,7 +4216,7 @@ public class GameConstants {
 		} else if (level > 30) {
 			v1 = 1;
 		}
-		v2 = (double) level;
+		v2 = level;
 		v3 = 2;
 		v4 = 1.0;
 		while (1 != 0) {

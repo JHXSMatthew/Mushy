@@ -117,6 +117,8 @@ public enum MonsterStatus implements Serializable, Buffstat {
                 return MapleDisease.DARKNESS;
             case SPEED:
                 return MapleDisease.SLOW;
+		default:
+			break;
         }
         return null;
     }

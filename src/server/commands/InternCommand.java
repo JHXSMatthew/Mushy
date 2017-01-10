@@ -48,7 +48,6 @@ import tools.HexTool;
 import tools.Pair;
 import tools.StringUtil;
 import tools.packet.CField;
-import tools.packet.CField.NPCPacket;
 import tools.packet.CWvsContext;
 
 /**

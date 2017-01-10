@@ -1,8 +1,5 @@
 package handling.handlers;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import client.MapleCharacter;
 import client.MapleClient;
 import client.MapleTrait;
@@ -13,9 +10,6 @@ import constants.GameConstants;
 import constants.ItemConstants;
 import handling.PacketHandler;
 import handling.RecvPacketOpcode;
-import server.MapleItemInformationProvider;
-import server.StructItemOption;
-import tools.Randomizer;
 import tools.data.LittleEndianAccessor;
 import tools.packet.CField;
 import tools.packet.CWvsContext;

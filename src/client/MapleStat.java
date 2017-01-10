@@ -53,6 +53,28 @@ public enum MapleStat {
         }
         return null;
     }
+    
+    public static enum ZeroStats {
+        IS_BETA(0x01),// boolean(byte)
+        SUB_HP(0x02),// int
+        SUB_MP(0x04),// int
+        SUB_SKIN(0x08),// byte
+        SUB_HAIR(0x10),// int
+        SUB_FACE(0x20),// int
+        SUB_MAX_HP(0x40),// int
+        SUB_MAX_MP(0x80),// int
+        ZERO_LINK_CASH_PART(0x100),// int
+        SUB_CUSTOM_HAIR(0x200); // int + int + int
+        private final int i;
+
+        private ZeroStats(int i) {
+            this.i = i;
+        }
+
+        public int getValue() {
+            return i;
+        }
+    }
 
     public static enum Temp {
 

@@ -86,7 +86,7 @@ public class ByteArrayByteStream {
      */
     public int readByte() {
         bytesRead++;
-        return ((int) arr[pos++]) & 0xFF;
+        return (arr[pos++]) & 0xFF;
     }
 
     /**
@@ -102,7 +102,7 @@ public class ByteArrayByteStream {
      * @return The byte as an integer.
      */
     public int readLastByte() {
-        return ((int) arr[pos]) & 0xFF;
+        return (arr[pos]) & 0xFF;
     }
 
     /**
@@ -118,7 +118,7 @@ public class ByteArrayByteStream {
         int[] a = null;
         int b = 0;
         while (bytes > 0) {
-            a[b] += ((int) arr[pos - bytes]);
+            a[b] += (arr[pos - bytes]);
             bytes--;
             b++;
         }

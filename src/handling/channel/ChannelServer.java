@@ -374,7 +374,7 @@ public class ChannelServer {
             final Iterator<HiredMerchant> itr = merchants.values().iterator();
 
             while (itr.hasNext()) {
-                HiredMerchant hm = (HiredMerchant) itr.next();
+                HiredMerchant hm = itr.next();
                 if (hm.getOwnerAccId() == accid || hm.getOwnerId() == cid) {
                     contains = true;
                     break;
@@ -393,7 +393,7 @@ public class ChannelServer {
             final Iterator<HiredMerchant> itr = merchants.values().iterator();
 
             while (itr.hasNext()) {
-                HiredMerchant hm = (HiredMerchant) itr.next();
+                HiredMerchant hm = itr.next();
                 if (hm.searchItem(itemSearch).size() > 0) {
                     list.add(hm);
                 }

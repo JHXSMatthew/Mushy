@@ -178,7 +178,7 @@ public class MapleDojoAgent {
     public static boolean warpNextMap(final MapleCharacter c, final boolean fromResting, final MapleMap currentmap) {
         try {
             final int temp = (currentmap.getId() - 925000000) / 100;
-            final int thisStage = (int) (temp - ((temp / 100) * 100));
+            final int thisStage = temp - ((temp / 100) * 100);
             final int points = getDojoPoints(thisStage);
             final ChannelServer ch = c.getClient().getChannelServer();
             final MapleMap deadMap = ch.getMapFactory().getMap(925020002);

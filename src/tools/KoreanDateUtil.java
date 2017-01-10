@@ -21,7 +21,7 @@
 package tools;
 
 import java.util.Date;
-import java.util.SimpleTimeZone;
+import java.util.TimeZone;
 
 import tools.packet.PacketHelper;
 
@@ -72,7 +72,7 @@ public class KoreanDateUtil {
     }
 
     private static boolean isDST() {
-        return SimpleTimeZone.getDefault().inDaylightTime(new Date());
+        return TimeZone.getDefault().inDaylightTime(new Date());
     }
 
     public static long getFileTimestamp(long timeStampinMillis, boolean roundToMinutes) {

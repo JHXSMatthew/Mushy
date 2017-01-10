@@ -656,7 +656,7 @@ public class JobPacket {
 			packet.write(1);
 			packet.writeInt(moblist.size());
 			for (int i = 0; i < moblist.size(); i++) {
-				packet.writeInt(((Integer) moblist.get(i)).intValue());
+				packet.writeInt(moblist.get(i).intValue());
 			}
 			packet.writeInt(skillid);
 			for (int i = 1; i <= moblist.size(); i++) {

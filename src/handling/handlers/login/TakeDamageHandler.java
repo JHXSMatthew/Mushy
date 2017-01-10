@@ -182,7 +182,7 @@ public class TakeDamageHandler {
 				damage = 1;
 			}
 		}
-		Pair modify = c.getPlayer().modifyDamageTaken(damage, attacker);
+		Pair<?, ?> modify = c.getPlayer().modifyDamageTaken(damage, attacker);
 		damage = ((Double) modify.left).intValue();
 		if (damage > 0) {
 

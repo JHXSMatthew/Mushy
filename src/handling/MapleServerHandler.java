@@ -20,6 +20,9 @@
  */
 package handling;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.apache.mina.common.IdleStatus;
 import org.apache.mina.common.IoHandlerAdapter;
 import org.apache.mina.common.IoSession;
@@ -55,19 +58,15 @@ import handling.login.handler.CharLoginHandler;
 import net.mina.MaplePacketDecoder;
 import tools.HexTool;
 import tools.MapleAESOFB;
-import tools.Randomizer;
 import tools.data.ByteArrayByteStream;
 import tools.data.LittleEndianAccessor;
 import tools.packet.CField;
 import tools.packet.CSPacket;
 import tools.packet.LoginPacket;
 
-import java.util.HashSet;
-import java.util.Set;
-
 public class MapleServerHandler extends IoHandlerAdapter {
 	
-	private final byte[] skey = new byte[] {
+	private final byte[] secretKey = new byte[] {
     		(byte) 0x29, 0x00, 0x00, 0x00,
     		(byte) 0xF6, 0x00, 0x00, 0x00,
     		(byte) 0x18, 0x00, 0x00, 0x00,
@@ -78,34 +77,27 @@ public class MapleServerHandler extends IoHandlerAdapter {
     		(byte) 0x61, 0x00, 0x00, 0x00
     };
 	
-    private static int numDC = 0;
-    private static long lastDC = System.currentTimeMillis();  
-
     @Override
     public void exceptionCaught(final IoSession session, final Throwable cause) throws Exception {
     }
 
     @Override
     public void sessionOpened(final IoSession session) throws Exception {
-    	
-        // Start of IP checking
-        final String address = session.getRemoteAddress().toString().split(":")[0];
-        final short port = Short.parseShort(session.getServiceAddress().toString().split(":")[1]);
         
         if (LoginServer.isShutdown()) {
             session.close();
             return;
         }
 
-        // IV used to decrypt packets from client.
-        final byte ivRecv[] = new byte[]{(byte) Randomizer.nextInt(255), (byte) Randomizer.nextInt(255), (byte) Randomizer.nextInt(255), (byte) Randomizer.nextInt(255)};
-        
-        // IV used to encrypt packets for client.
-        final byte ivSend[] = new byte[]{(byte) Randomizer.nextInt(255), (byte) Randomizer.nextInt(255), (byte) Randomizer.nextInt(255), (byte) Randomizer.nextInt(255)};
-
+        byte ivRecv[] = { 70, 114, 122, 82 };
+		byte ivSend[] = { 82, 48, 120, 115 };
+		
+		ivRecv[3] = (byte) (Math.random() * 255);
+		ivSend[3] = (byte) (Math.random() * 255);
+		
         MapleClient client = new MapleClient(
-                new MapleAESOFB(skey, ivSend, (short) (0xFFFF - ServerConstants.MAPLE_VERSION)),
-                new MapleAESOFB(skey, ivRecv, ServerConstants.MAPLE_VERSION), session);
+                new MapleAESOFB(secretKey, ivSend, (short) (0xFFFF - ServerConstants.MAPLE_VERSION)),
+                new MapleAESOFB(secretKey, ivRecv, ServerConstants.MAPLE_VERSION), session);
         client.setChannel(-1);
 
         MaplePacketDecoder.DecoderState decoderState = new MaplePacketDecoder.DecoderState();
@@ -116,45 +108,28 @@ public class MapleServerHandler extends IoHandlerAdapter {
         session.setIdleTime(IdleStatus.READER_IDLE, 60);
         session.setIdleTime(IdleStatus.WRITER_IDLE, 60);
 
-        System.out.println("Connection Established " + address + ":"+port);
+        System.out.println("Connection Established " + session.getRemoteAddress().toString().split(":")[0] + ":" + session.getServiceAddress().toString().split(":")[1]);
     }
 
     @Override
     public void sessionClosed(final IoSession session) throws Exception {
-        final MapleClient client = (MapleClient) session.getAttribute(MapleClient.CLIENT_KEY);
+    	synchronized (session) {
+			MapleClient client = (MapleClient) session.getAttribute(MapleClient.CLIENT_KEY);
 
-        if (client != null) {
-            byte state = MapleClient.CHANGE_CHANNEL;
-            if (!LoginServer.isShutdown() && client.getPlayer() != null) {
-                state = client.getLoginState();
-            }
-            if (state != MapleClient.CHANGE_CHANNEL) {
-                if (System.currentTimeMillis() - lastDC < 60000) { //within the minute
-                    numDC++;
-                    if (numDC > 100) { //100+ people have dc'd in minute in channelserver
-                        System.out.println("Writing log...");
-                        numDC = 0;
-                        lastDC = System.currentTimeMillis(); // intentionally place here
-                    }
-                } else {
-                    numDC = 0;
-                    lastDC = System.currentTimeMillis(); // intentionally place here
-                }
-            }
-            
-            session.close();
-            client.disconnect(true, false);
-            session.removeAttribute(MapleClient.CLIENT_KEY);
-        }
-        super.sessionClosed(session);
-    }
+			if (client != null) {
+				client.disconnect(true, false);
+				session.removeAttribute(MapleClient.CLIENT_KEY);
+			}
+		}
+		super.sessionClosed(session);
+	}
 
+    //TODO Idle Time Needs Increase.
     @Override
     public void sessionIdle(final IoSession session, final IdleStatus status) throws Exception {
-        final MapleClient client = (MapleClient) session.getAttribute(MapleClient.CLIENT_KEY);
-
+        MapleClient client = (MapleClient) session.getAttribute(MapleClient.CLIENT_KEY);
         if (client != null) {
-            // client.sendPing();
+            	//client.sendPing();
         }
         super.sessionIdle(session, status);
     }
@@ -180,12 +155,12 @@ public class MapleServerHandler extends IoHandlerAdapter {
             return;
         }
         final LittleEndianAccessor lea = new LittleEndianAccessor(new ByteArrayByteStream((byte[]) message));
-        if (lea.available() < 2) {
-            return;
+        	if (lea.available() < 2) {
+        		return;
         }
-        final MapleClient c = (MapleClient) session.getAttribute(MapleClient.CLIENT_KEY);
-        if (c == null || !c.isReceiving()) {
-            return;
+        MapleClient c = (MapleClient) session.getAttribute(MapleClient.CLIENT_KEY);
+        	if (c == null || !c.isReceiving()) {
+        		return;
         }
         
         int opcode = lea.readShort();
@@ -211,7 +186,7 @@ public class MapleServerHandler extends IoHandlerAdapter {
     }
 
     private boolean isSpamHeader(int opCode) {
-        Set<Integer> spamHeaders = new HashSet();
+        Set<Integer> spamHeaders = new HashSet<>();
         spamHeaders.add(RecvPacketOpcode.NPC_ACTION.getValue());
         spamHeaders.add(RecvPacketOpcode.MOVE_LIFE.getValue());
         spamHeaders.add(RecvPacketOpcode.MOVE_PLAYER.getValue());
@@ -219,42 +194,15 @@ public class MapleServerHandler extends IoHandlerAdapter {
         spamHeaders.add(RecvPacketOpcode.HEAL_OVER_TIME.getValue());
         return spamHeaders.contains(opCode);
     }
-
+    
+    //TODO : Removal once ported over to new handler processor.
     public static void handlePacket(final RecvPacketOpcode header, final LittleEndianAccessor lea, final MapleClient c) throws Exception {
-    	
-    	/*if (ServerConfig.logPackets && !isSpamHeader(header)) {
-            String tab = "";
-            for (int i = 4; i > Integer.valueOf(header.name().length() / 8); i--) {
-                tab += "\t";
-            }
-            System.out.println("[Recv]\t" + header.name() + tab + "|\t" + header.getValue() + "\t|\t" + HexTool.getOpcodeToString(header.getValue()));
-            FileoutputUtil.log("PacketLog.txt", "\r\n\r\n[Recv]\t" + header.name() + tab + "|\t" + header.getValue() + "\t|\t" + HexTool.getOpcodeToString(header.getValue()) + "\r\n\r\n");
-        }*/	
         switch (header) {
-          /*case LOGIN_REDIRECTOR:
-                    client_username = slea.readMapleAsciiString();
-                    c.loginData(client_username);
-                    System.out.println(client_username);
-                    c.getSession().write(LoginPacket.getAuthSuccessRequest(c));
-                    break;*/
             case CLIENT_HELLO:
                 // [08] - locale
                 // [8E 00] - version
                 // [02 00] - patch version
                 break;
-       //         case CHANGE_PIC_REQUEST:
-     //           final String oldPic = slea.readMapleAsciiString();
-     //           final String newPic = slea.readMapleAsciiString();
-     //           int response = 6; // Couldn't process the request - Will never end as 6, but precautionary.
-     //         if (!c.getPic().equals(oldPic)) {
-     //               response = 20; // Incorrect pic entered
-     //          } else if (c.getPic().equals(oldPic)) {
-    //                c.setSecondPassword(newPic);
-    //                c.updateSecondPassword();
-     //               response = 0; // Success
-     //           }
-     //           c.getSession().write(LoginPacket.sendPicResponse(response));
-     //           break;  
             case CLIENT_START:
             	lea.skip(1); // locale
             	lea.skip(2); // version
@@ -917,8 +865,6 @@ public class MapleServerHandler extends IoHandlerAdapter {
             case OS_INFORMATION:
                 System.out.println(c.getSessionIPAddress());
                 break;
-//            case BUFF_RESPONSE://wat does it do?
-//                break;
             case BUTTON_PRESSED:
                 break;
             default:

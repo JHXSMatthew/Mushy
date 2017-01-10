@@ -4,7 +4,6 @@ import client.MapleClient;
 import handling.PacketHandler;
 import handling.RecvPacketOpcode;
 import handling.SendPacketOpcode;
-import tools.HexTool;
 import tools.data.LittleEndianAccessor;
 
 public class ClientErrorHandler {

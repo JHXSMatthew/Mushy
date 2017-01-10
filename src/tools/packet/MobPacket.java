@@ -1,7 +1,6 @@
 package tools.packet;
 
 import java.awt.Point;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -521,24 +520,7 @@ public class MobPacket {
 
 		return pw.getPacket();
 	}
-
-	private static void getLongMask_NoRef(PacketWriter pw, Collection<MonsterStatusEffect> ss,
-			boolean ignore_imm) {
-		int[] mask = new int[12];
-		for (MonsterStatusEffect statup : ss) {
-			if ((statup != null) && (statup.getStati() != MonsterStatus.WEAPON_DAMAGE_REFLECT)
-					&& (statup.getStati() != MonsterStatus.MAGIC_DAMAGE_REFLECT)
-					&& ((!ignore_imm) || ((statup.getStati() != MonsterStatus.WEAPON_IMMUNITY)
-							&& (statup.getStati() != MonsterStatus.MAGIC_IMMUNITY)
-							&& (statup.getStati() != MonsterStatus.DAMAGE_IMMUNITY)))) {
-				mask[(statup.getStati().getPosition() - 1)] |= statup.getStati().getValue();
-			}
-		}
-		for (int i = mask.length; i >= 1; i--) {
-			pw.writeInt(mask[(i - 1)]);
-		}
-	}
-
+	
 	public static byte[] applyMonsterStatus(int oid, MonsterStatus mse, int x, MobSkill skil) {
 		PacketWriter pw = new PacketWriter();
 
@@ -589,7 +571,7 @@ public class MobPacket {
 
 		pw.writeShort(SendPacketOpcode.APPLY_MONSTER_STATUS.getValue());
 		pw.writeInt(mons.getObjectId());
-		MonsterStatusEffect ms = (MonsterStatusEffect) mse.get(0);
+		MonsterStatusEffect ms = mse.get(0);
 		if (ms.getStati() == MonsterStatus.POISON) {
 			PacketHelper.writeSingleMask(pw, MonsterStatus.EMPTY);
 			pw.write(mse.size());
