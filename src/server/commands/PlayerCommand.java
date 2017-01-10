@@ -40,6 +40,10 @@ public class PlayerCommand {
 			return 1;
 		}
 	}
+	
+	public static class Ea extends Dispose {
+		
+	}
 
 	public static class ExpFix extends CommandExecute {
 
