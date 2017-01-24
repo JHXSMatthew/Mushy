@@ -224,24 +224,24 @@ public class MapleAESOFB {
     private static final void funnyShit(byte inputByte, byte[] in) {
         byte a = in[1];
         byte b = inputByte;
-        byte c = funnyBytes[(int) a & 0xFF];
+        byte c = funnyBytes[a & 0xFF];
         c -= inputByte;
         in[0] += c;
         c = in[2];
-        c ^= funnyBytes[(int) b & 0xFF];
-        a -= (int) c & 0xFF;
+        c ^= funnyBytes[b & 0xFF];
+        a -= c & 0xFF;
         in[1] = a;
         a = in[3];
         c = a;
-        a -= (int) in[0] & 0xFF;
-        c = funnyBytes[(int) c & 0xFF];
+        a -= in[0] & 0xFF;
+        c = funnyBytes[c & 0xFF];
         c += inputByte;
         c ^= in[2];
         in[2] = c;
-        a += (int) funnyBytes[(int) b & 0xFF] & 0xFF;
+        a += funnyBytes[b & 0xFF] & 0xFF;
         in[3] = a;
 
-        int d = ((int) in[0]) & 0xFF;
+        int d = (in[0]) & 0xFF;
         d |= (in[1] << 8) & 0xFF00;
         d |= (in[2] << 16) & 0xFF0000;
         d |= (in[3] << 24) & 0xFF000000;

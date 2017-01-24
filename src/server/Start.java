@@ -111,9 +111,9 @@ public class Start extends Properties {
 
         MapleQuest.initQuests();
         MapleItemInformationProvider.getInstance().runEtc();
-        MapleMonsterInformationProvider.getInstance().load();
-
+        MapleMonsterInformationProvider.getInstance().load(); // Throws NPE (?)
         MapleItemInformationProvider.getInstance().runItems();
+        System.out.println("Loading..");
         SkillFactory.load();
         LoginInformationProvider.getInstance();
         // RandomRewards.load();

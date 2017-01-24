@@ -1909,7 +1909,7 @@ public class NPCConversationManager extends AbstractPlayerInteraction {
 			} else if (type.equalsIgnoreCase("ItemEXP")) {
 				eq.setItemEXP(eq.getItemEXP() + offset);
 			} else if (type.equalsIgnoreCase("Expiration")) {
-				eq.setExpiration((long) (eq.getExpiration() + offset));
+				eq.setExpiration(eq.getExpiration() + offset);
 			} else if (type.equalsIgnoreCase("Flag")) {
 				eq.setFlag((byte) (eq.getFlag() + offset));
 			}
@@ -2712,7 +2712,7 @@ public class NPCConversationManager extends AbstractPlayerInteraction {
 			}
 			MapleInventoryManipulator.addbyItem(c, item.copy());
 		} else {
-			MapleInventoryManipulator.addById(c, itemid, (short) 1, "Hyperious", null, (long) 0, false,
+			MapleInventoryManipulator.addById(c, itemid, (short) 1, "Hyperious", null, 0, false,
 					"Received from interaction " + this.id + " (" + id2 + ") on "
 							+ FileoutputUtil.CurrentReadable_Date());
 		}

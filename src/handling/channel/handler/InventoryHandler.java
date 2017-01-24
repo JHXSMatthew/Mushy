@@ -57,7 +57,6 @@ import client.inventory.MapleMount;
 import client.inventory.MaplePet;
 import client.inventory.MaplePet.PetFlag;
 import constants.GameConstants;
-import constants.MapConstants;
 import handling.channel.ChannelServer;
 import handling.world.MaplePartyCharacter;
 import handling.world.World;
@@ -4492,7 +4491,7 @@ case 2431935: {
         }
         //System.out.println("PETS: " + slea.toString());
         c.getPlayer().setScrolledPosition((short) 0);
-        final byte petz = (byte) c.getPlayer().getPetIndex((int) slea.readLong());
+        final byte petz = c.getPlayer().getPetIndex((int) slea.readLong());
         final MaplePet pet = chr.getPet(petz);
         slea.skip(1); // [4] Zero, [4] Seems to be tickcount, [1] Always zero
         slea.skip(4); // update tick

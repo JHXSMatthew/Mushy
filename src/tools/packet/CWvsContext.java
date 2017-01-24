@@ -259,10 +259,10 @@ public class CWvsContext {
     	pw.write(remove);
     	pw.writeShort(update.size());
     	update.entrySet().forEach(entry -> {
-    		pw.writeInt(((Skill) entry.getKey()).getId());
-    		pw.writeInt(((SkillEntry) entry.getValue()).skillevel);
-    		pw.writeInt(((SkillEntry) entry.getValue()).masterlevel);
-    		PacketHelper.addExpirationTime(pw, ((SkillEntry) entry.getValue()).expiration);
+    		pw.writeInt(entry.getKey().getId());
+    		pw.writeInt(entry.getValue().skillevel);
+    		pw.writeInt(entry.getValue().masterlevel);
+    		PacketHelper.addExpirationTime(pw, entry.getValue().expiration);
     	});
     	pw.write(0); // pw.write(hyper ? 0x0C : 4); ??????
     	return pw.getPacket();
@@ -291,7 +291,7 @@ public class CWvsContext {
     public static byte[] bombLieDetector(boolean error, int mapid, int channel) {
         PacketWriter pw = new PacketWriter();
 
-        pw.writeShort(SendPacketOpcode.LIE_DETECTOR.getValue());
+        pw.writeShort(SendPacketOpcode.ANTI_MACRO_RESULT.getValue());
         pw.write(error ? 2 : 1);
         pw.writeInt(mapid);
         pw.writeInt(channel);
@@ -302,7 +302,7 @@ public class CWvsContext {
     public static byte[] sendLieDetector(final byte[] image) {
         PacketWriter pw = new PacketWriter();
 
-        pw.writeShort(SendPacketOpcode.LIE_DETECTOR.getValue());
+        pw.writeShort(SendPacketOpcode.ANTI_MACRO_RESULT.getValue());
         pw.write(6); // 1 = not attacking, 2 = tested, 3 = going through 
 
         pw.write(4); // 2 give invalid pointer (suppose to be admin macro) 
@@ -324,7 +324,7 @@ public class CWvsContext {
     public static byte[] LieDetectorResponse(final byte msg, final byte msg2) {
         PacketWriter pw = new PacketWriter();
 
-        pw.writeShort(SendPacketOpcode.LIE_DETECTOR.getValue());
+        pw.writeShort(SendPacketOpcode.ANTI_MACRO_RESULT.getValue());
         pw.write(msg); // 1 = not attacking, 2 = tested, 3 = going through 
         pw.write(msg2);
 
@@ -334,7 +334,7 @@ public class CWvsContext {
     public static byte[] getLieDetector(byte type, String tester) {
         PacketWriter pw = new PacketWriter();
 
-        pw.writeShort(SendPacketOpcode.LIE_DETECTOR.getValue()); // 2A 00 01 00 00 00  
+        pw.writeShort(SendPacketOpcode.ANTI_MACRO_RESULT.getValue()); // 2A 00 01 00 00 00  
         pw.write(type); // 1 = not attacking, 2 = tested, 3 = going through, 4 save screenshot 
         switch (type) {
             case 4: //save screen shot 
@@ -379,7 +379,7 @@ public class CWvsContext {
     public static byte[] lieDetector(byte mode, byte action, byte[] image, String str1, String str2, String str3) {
         PacketWriter pw = new PacketWriter();
 
-        pw.writeShort(SendPacketOpcode.LIE_DETECTOR.getValue());
+        pw.writeShort(SendPacketOpcode.ANTI_MACRO_RESULT.getValue());
         pw.write(mode);
         pw.write(action); //2 = show msg/save screenshot/maple admin picture(mode 6)
         if (mode == 6) {
@@ -454,7 +454,7 @@ public class CWvsContext {
         PacketWriter pw = new PacketWriter();
 
         pw.writeShort(SendPacketOpcode.SHOW_QUEST_COMPLETION.getValue());
-        pw.writeShort(id);
+        pw.writeInt(id);
 
         return pw.getPacket();
     }
@@ -614,7 +614,7 @@ public class CWvsContext {
             pw.writeShort(pet.getCloseness());
             pw.write(pet.getFullness());
             pw.writeShort(0);
-            Item inv = chr.getInventory(MapleInventoryType.EQUIPPED).getItem((short) (byte) (index == 2 ? -130 : index == 1 ? -114 : -138));
+            Item inv = chr.getInventory(MapleInventoryType.EQUIPPED).getItem((byte) (index == 2 ? -130 : index == 1 ? -114 : -138));
             pw.writeInt(inv == null ? 0 : inv.getItemId());
             pw.writeInt(-1);//new v140
             pw.write(chr.getSummonedPets().size() > index); //continue loop
@@ -658,15 +658,15 @@ public class CWvsContext {
         pw.writeInt(0);
         pw.writeInt(0);
 
-        List chairs = new ArrayList();
+        List<Integer> chairs = new ArrayList<>();
         for (Item i : chr.getInventory(MapleInventoryType.SETUP).newList()) {
             if ((i.getItemId() / 10000 == 301) && (!chairs.contains(Integer.valueOf(i.getItemId())))) {
                 chairs.add(Integer.valueOf(i.getItemId()));
             }
         }
         pw.writeInt(chairs.size());
-        for (Iterator i$ = chairs.iterator(); i$.hasNext();) {
-            int i = ((Integer) i$.next()).intValue();
+        for (Iterator<Integer> is = chairs.iterator(); is.hasNext();) {
+            int i = is.next().intValue();
             pw.writeInt(i);
         }
 
@@ -830,12 +830,12 @@ public class CWvsContext {
         pw.writeShort(SendPacketOpcode.SERVERMESSAGE.getValue());
         pw.write(10);
         if (message.get(0) != null) {
-            pw.writeMapleAsciiString((String) message.get(0));
+            pw.writeMapleAsciiString(message.get(0));
         }
         pw.write(message.size());
         for (int i = 1; i < message.size(); i++) {
             if (message.get(i) != null) {
-                pw.writeMapleAsciiString((String) message.get(i));
+                pw.writeMapleAsciiString(message.get(i));
             }
         }
         pw.write(channel - 1);
@@ -869,6 +869,7 @@ public class CWvsContext {
         pw.writeInt(ourItem);
         pw.writeInt(itemId2);
         pw.writeInt(quantity2);
+		pw.writeInt(0);
         pw.write(0);
         pw.write(0);
 
@@ -904,7 +905,7 @@ public class CWvsContext {
         pw.writeInt(size);
         for (HiredMerchant hm : hms) {
             for (Iterator<HiredMerchant> i = hms.iterator(); i.hasNext();) {
-                hm = (HiredMerchant) i.next();
+                hm = i.next();
                 final List<MaplePlayerShopItem> items = hm.searchItem(itemSearch);
                 for (MaplePlayerShopItem item : items) {
                     pw.writeMapleAsciiString(hm.getOwnerName());
@@ -2796,7 +2797,7 @@ public class CWvsContext {
             pw.writeInt(pages);
             
             for (int i = 0; i < pages; i++) {
-                addThread(pw, (MapleBBSThread) bbs.get(start + i));
+                addThread(pw, bbs.get(start + i));
             }
 
             return pw.getPacket();

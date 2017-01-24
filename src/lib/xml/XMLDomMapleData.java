@@ -131,6 +131,8 @@ public class XMLDomMapleData implements MapleData {
                     case STRING:
                     case UOL:
                         return value;
+				default:
+					break;
                 }
             }
             case VECTOR: {
@@ -141,6 +143,8 @@ public class XMLDomMapleData implements MapleData {
             case CANVAS: {
             	throw new UnsupportedOperationException("Maple Canvas has been truncated.");
             }
+		default:
+			break;
         }
         return null;
     }

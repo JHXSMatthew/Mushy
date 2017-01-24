@@ -84,7 +84,7 @@ public class CharacterTransfer implements Externalizable {
         this.vpoints = chr.getVPoints();
         this.name = chr.getName();
         this.fame = chr.getFame();
-        this.gender = (byte) chr.getGender();
+        this.gender = chr.getGender();
         this.level = chr.getLevel();
         this.str = chr.getStat().getStr();
         this.dex = chr.getStat().getDex();
@@ -122,9 +122,9 @@ public class CharacterTransfer implements Externalizable {
         this.marriage = chr.getMarriage();
         this.world = chr.getWorld();
         this.guildid = chr.getGuildId();
-        this.guildrank = (byte) chr.getGuildRank();
+        this.guildrank = chr.getGuildRank();
         this.guildContribution = chr.getGuildContribution();
-        this.alliancerank = (byte) chr.getAllianceRank();
+        this.alliancerank = chr.getAllianceRank();
         this.gmLevel = (byte) chr.getGMLevel();
         this.points = chr.getPoints();
         this.dpoints = chr.getDPoints();
@@ -135,7 +135,7 @@ public class CharacterTransfer implements Externalizable {
         this.petStore = chr.getPetStores();
         this.subcategory = chr.getSubcategory();
         this.imps = chr.getImps();
-        this.fatigue = (short) chr.getFatigue();
+        this.fatigue = chr.getFatigue();
         this.totalWins = chr.getTotalWins();
         this.totalLosses = chr.getTotalLosses();
         this.battleshipHP = chr.currentBattleshipHP();

@@ -25,7 +25,6 @@ public class OpcodeManager {
 		// Login
 		ServerStatusRequest.class,
 		ServerListRequest.class,
-		AuthServerHandler.class,
 		PlayerLoggedInHandler.class,
 		CheckCharacterName.class,
 		DeleteCharHandler.class,

@@ -28,7 +28,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.SimpleTimeZone;
+import java.util.TimeZone;
+
 import com.google.common.collect.ArrayListMultimap;
 
 import client.InnerSkillValueHolder;
@@ -39,6 +40,8 @@ import client.MapleClient;
 import client.MapleCoolDownValueHolder;
 import client.MapleTrait;
 import client.PartTimeJob;
+import client.Skill;
+import client.SkillEntry;
 import client.inventory.Equip;
 import client.inventory.EquipSpecialStat;
 import client.inventory.EquipStat;
@@ -63,10 +66,8 @@ import server.shops.MapleShopItem;
 import server.stores.AbstractPlayerStore;
 import server.stores.IMaplePlayerShop;
 import tools.BitTools;
-import tools.HexTool;
 import tools.KoreanDateUtil;
 import tools.Pair;
-import tools.Randomizer;
 import tools.StringUtil;
 import tools.Triple;
 import tools.data.PacketWriter;
@@ -110,7 +111,7 @@ public class PacketHelper {
     }
 
     public static long getFileTimestamp(long timeStampinMillis, boolean roundToMinutes) {
-        if (SimpleTimeZone.getDefault().inDaylightTime(new Date())) {
+        if (TimeZone.getDefault().inDaylightTime(new Date())) {
             timeStampinMillis -= 3600000L;
         }
         long time;
@@ -128,6 +129,17 @@ public class PacketHelper {
         pw.write(image);
     }
 
+    public static void addMiniGameRecord(PacketWriter pw) {
+        int GW_MiniGameRecord = 0;
+        pw.writeShort(GW_MiniGameRecord);
+        for (int i = 0; i < GW_MiniGameRecord; i++) {
+            pw.writeInt(0);// dwOwnerAID
+            pw.writeInt(0);// sOwnerName ?? :-/
+            pw.writeInt(0);// IRewardGradeQ
+            pw.writeInt(0);// IRewardGradeQ2
+            
+        }
+    }
     public static void addStartedQuestInfo(PacketWriter pw, MapleCharacter chr) {
         pw.write(1);
         final List<MapleQuestStatus> started = chr.getStartedQuests();
@@ -146,23 +158,6 @@ public class PacketHelper {
             }
         }
         pw.writeShort(0);
-        /*
-         pw.writeShort(7);
-         pw.writeMapleAsciiString("1NX5211068");
-         pw.writeMapleAsciiString("1");
-         pw.writeMapleAsciiString("SE20130619");
-         pw.writeMapleAsciiString("20130626060823");
-         pw.writeMapleAsciiString("99NX5533018");
-         pw.writeMapleAsciiString("1");
-         pw.writeMapleAsciiString("1NX1003792");
-         pw.writeMapleAsciiString("1");
-         pw.writeMapleAsciiString("1NX1702337");
-         pw.writeMapleAsciiString("1");
-         pw.writeMapleAsciiString("1NX9102857");
-         pw.writeMapleAsciiString("1");
-         pw.writeMapleAsciiString("SE20130116");
-         pw.writeMapleAsciiString("1");
-         */
     }
 
     public static void addCompletedQuestInfo(PacketWriter pw, MapleCharacter chr) {
@@ -176,68 +171,38 @@ public class PacketHelper {
     }
  
     public static void addSkillInfo(PacketWriter pw, MapleCharacter chr) {
+        final Map<Skill, SkillEntry> skills = chr.getSkills();
         pw.write(1);
-        pw.writeShort(0);
-        pw.writeShort(0);
-        /*PacketWriter pw1 =  new PacketWriter();
-         final Map<Skill, SkillEntry> skills = chr.getSkills();
-         pw1.write(1);
-         int hyper = 0;
-         //for (Skill skill : skills.keySet()) {
-         //    if (skill.isHyper()) hyper++;
-         //}
-         pw1.writeShort(skills.size() - hyper);
-         boolean follow = false;
+        pw.writeShort(skills.size());
         
-         for (Map.Entry<Skill, SkillEntry> skill : skills.entrySet()) {
-         //if (((Skill) skill.getKey()).isHyper()) continue;
-            
-         if (follow) {
-         follow = false;
-         if (!GameConstants.isHyperSkill((Skill) skill.getKey()))
-         pw1.writeInt(skill.getKey().getId());
-         }
-         pw1.writeInt(skill.getKey().getId());
-         pw1.writeInt(((SkillEntry) skill.getValue()).skillevel);
-         addExpirationTime(pw1, ((SkillEntry) skill.getValue()).expiration);
+        for (Map.Entry<Skill, SkillEntry> skill : skills.entrySet()) {
+            pw.writeInt(skill.getKey().getId());
+            pw.writeInt(skill.getValue().skillevel);
+            addExpirationTime(pw, skill.getValue().expiration);
 
-         if (GameConstants.isHyperSkill((Skill) skill.getKey())) {
-         // pw1.writeInt(1110009);
-         follow = true;
-         } else if (((Skill) skill.getKey()).isFourthJob()) {
-         pw1.writeInt(((SkillEntry) skill.getValue()).masterlevel);
-         }
-         //  addSingleSkill(pw, skill.getKey(), skill.getValue());
-         }
-         pw.write(pw1.getPacket());
-         System.out.println(HexTool.toString(pw1.getPacket()));
-         */
+            if (skill.getKey().isFourthJob()) {
+               pw.writeInt(skill.getValue().masterlevel);
+            }
+        }
+        
+        int unknown = 0;
+        pw.writeShort(unknown);
+        for (int i = 0; i < unknown; i++) {
+            pw.writeInt(0);
+            pw.writeShort(0);
+        }
+        
+        int unknown2 = 0;
+        pw.writeInt(unknown2);
+        for (int i = 0; i < unknown2; i++) {
+            pw.writeInt(0);
+            pw.writeInt(0);
+            pw.writeInt(0);
+            pw.writeShort(0);
+            pw.writeLong(0);
+        }
     }
 
-//    public static void addSingleSkill(PacketWriter pw, Skill skill, SkillEntry ske) {
-//        try {
-//            // if (skill.getId() != 1001008) return;
-//
-//            PacketWriter pw1 = new PacketWriter();
-//
-//            pw1.writeInt(skill.getId());
-//            pw1.writeInt(ske.skillevel);
-//            addExpirationTime(pw1, ske.expiration);
-//
-//            if (GameConstants.isHyperSkill(skill)) {
-//                //System.out.println("HYPER: " + ((Skill) skill.getKey()).getId());
-//                pw1.writeInt(0);
-//            } else if (((Skill) skill).isFourthJob()) {
-//                pw1.writeInt(((SkillEntry) ske).masterlevel);
-//            }
-//            if (skill.getId() == 1001008) {
-//                System.out.println(HexTool.toString(pw1.getPacket()));
-//            }
-//            pw.write(pw1.getPacket());
-//        } catch (Exception ex) {
-//            ex.printStackTrace();
-//        }
-//    }
     public static void addCoolDownInfo(PacketWriter pw, MapleCharacter chr) {
         final List<MapleCoolDownValueHolder> cd = chr.getCooldowns();
         pw.writeShort(cd.size());
@@ -313,62 +278,135 @@ public class PacketHelper {
         }
     }
 
-    public static void addInventoryInfo(PacketWriter pw, MapleCharacter chr) {
-    	pw.writeInt(0);
-        pw.writeInt(0);
-        pw.writeInt(0);
-    	// addPotionPotInfo(pw, chr);
-        pw.writeInt(chr.getId());
-
-        pw.writeInt(0); 
-        pw.writeInt(0);
-        pw.writeInt(0);
-        pw.writeInt(0);
-        pw.writeInt(0);
-        pw.writeInt(0);
-
-        pw.writeInt(0);
-
-        pw.write(0);
-        pw.write(0);
-        pw.write(0);
-
-        pw.write(chr.getInventory(MapleInventoryType.EQUIP).getSlotLimit());
-        pw.write(chr.getInventory(MapleInventoryType.USE).getSlotLimit());
-        pw.write(chr.getInventory(MapleInventoryType.SETUP).getSlotLimit());
-        pw.write(chr.getInventory(MapleInventoryType.ETC).getSlotLimit());
-        pw.write(chr.getInventory(MapleInventoryType.CASH).getSlotLimit());
-
-        MapleQuestStatus stat = chr.getQuestNoAdd(MapleQuest.getInstance(122700));
-        if ((stat != null) && (stat.getCustomData() != null) && (Long.parseLong(stat.getCustomData()) > System.currentTimeMillis())) {
-            pw.writeLong(getTime(Long.parseLong(stat.getCustomData())));
-        } else {
-            pw.writeLong(getTime(-2L));
+    public static void EncodeMonsterBattleRankInfo(PacketWriter pw) {
+        pw.write(0);// nType
+        pw.writeInt(0);// nRank
+        pw.write(0);// nWorldID
+        pw.writeInt(0);// dwAccountID
+        pw.writeInt(0);// dwCharacterID
+        pw.writeInt(0);// nPoint
+        pw.writeInt(0);// dwMobID1
+        pw.writeInt(0);// dwMobID2
+        pw.writeInt(0);// dwMobID3
+        pw.writeMapleAsciiString("");// sCharacterName
+    }
+    
+    public static void EncodeMonsterBattleLadderUserInfo(PacketWriter pw) {
+        pw.writeInt(0);// nWorldID
+        pw.writeInt(0);// dwAccountID
+        pw.writeInt(0);// dwCharacterID
+        pw.writeInt(0);// nPoint
+        pw.writeInt(0);// nWin
+        pw.writeInt(0);// nDefeat
+        pw.writeInt(0);// nDraw
+        pw.writeInt(0);// nCountBattle
+        pw.writeInt(0);// nCountPVP
+        pw.writeLong(0);// ftBPUpdateTime
+        pw.writeLong(0);// ftPVPUpdateTime
+        pw.writeLong(0);// ftRegisterDate
+    }
+    
+    public static void addInventoryInfo(PacketWriter pw, MapleCharacter chr, long dbcharFlag) {
+    	if ((dbcharFlag & 0x2000000) != 0) {
+            int GW_ExpConsumeItem = 0;
+            pw.writeInt(GW_ExpConsumeItem);
+            for (int i = 0; i < GW_ExpConsumeItem; i++) {
+                pw.writeInt(0);// nItemID
+                pw.writeInt(0);// nMinLev
+                pw.writeInt(0);// nMaxLev
+                pw.writeLong(0);// nRemainExp64
+            }
         }
-        pw.write(0); // new
+        if ((dbcharFlag & 0x40000000) != 0) {
+            addPotionPotInfo(pw, chr);
+        }
+        if ((dbcharFlag & 0x8000) != 0) {// Probably all Monster Battle Information.
+            int MonsterBattle_MobInfo = 0;
+            pw.writeInt(MonsterBattle_MobInfo);
+            for (int i = 0; i < MonsterBattle_MobInfo; i++) {
+                // not sure about the names or if it monster battle skill :~/
+                pw.writeInt(0);// nSkillID
+                pw.writeInt(0);// nProb
+                pw.writeInt(0);// nDamage
+                pw.writeInt(0);// nCost
+                pw.writeInt(0);// nTarget
+                pw.writeInt(0);// nReflectDamage
+                pw.write(0);// bAttackSkill
+                pw.writeInt(0);// ?
+                pw.writeInt(0);// ?
+            }
+            pw.writeInt(chr.getId());
+            for (int i = 0; i < 3; i++) {
+                pw.writeInt(0);
+                pw.writeInt(0);
+            }
+            int unknown = 0;
+            pw.writeInt(unknown);
+            for (int i = 0; i < unknown; i++) {
+                pw.writeInt(0);
+            }
+            int GW_MonsterBattleLadder_UserInfo = 0;
+            pw.write(GW_MonsterBattleLadder_UserInfo);
+            if (GW_MonsterBattleLadder_UserInfo > 0) {
+                EncodeMonsterBattleLadderUserInfo(pw);
+            }
+            
+            int GW_MonsterBattleRankInfo = 0;
+            pw.write(GW_MonsterBattleRankInfo);
+            for (int i = 0; i < GW_MonsterBattleRankInfo; i++) {
+                EncodeMonsterBattleRankInfo(pw);
+            }
+            
+            // Again ? f6
+            int GW_MonsterBattleRankInfo2 = 0;
+            pw.write(GW_MonsterBattleRankInfo2);
+            for (int i = 0; i < GW_MonsterBattleRankInfo2; i++) {
+                EncodeMonsterBattleRankInfo(pw);
+            }
+        }
+        
+        if ((dbcharFlag & 0x80) != 0) {
+            for (byte i = 1; i <= 5; i++) {
+                pw.write(chr.getInventory(MapleInventoryType.getByType(i)).getSlotLimit());
+            }
+            MapleQuestStatus stat = chr.getQuestNoAdd(MapleQuest.getInstance(122700));
+            if ((stat != null) && (stat.getCustomData() != null) && (Long.parseLong(stat.getCustomData()) > System.currentTimeMillis())) {
+                pw.writeLong(getTime(Long.parseLong(stat.getCustomData())));
+            } else {
+                pw.writeLong(getTime(-2L));
+            }
+        }
+        boolean encodeEquipInventory = false;
+        pw.write(encodeEquipInventory);
         MapleInventory iv = chr.getInventory(MapleInventoryType.EQUIPPED);
         final List<Item> equipped = iv.newList();
         Collections.sort(equipped);
+        
         for (Item item : equipped) {
             if ((item.getPosition() < 0) && (item.getPosition() > -100)) {
                 addItemPosition(pw, item, false, false);
                 addItemInfo(pw, item, chr);
             }
         }
-        pw.writeShort(0);
+        pw.writeShort(0);// Equipped
+        
         for (Item item : equipped) {
             if ((item.getPosition() <= -100) && (item.getPosition() > -1000)) {
                 addItemPosition(pw, item, false, false);
                 addItemInfo(pw, item, chr);
             }
         }
-        pw.writeShort(0);
-        iv = chr.getInventory(MapleInventoryType.EQUIP);
-        for (Item item : iv.list()) {
-            addItemPosition(pw, item, false, false);
-            addItemInfo(pw, item, chr);
+        pw.writeShort(0);// Equipped cash
+        
+        if (!encodeEquipInventory) {
+            iv = chr.getInventory(MapleInventoryType.EQUIP);
+            for (Item item : iv.list()) {
+                addItemPosition(pw, item, false, false);
+                addItemInfo(pw, item, chr);
+            }
+            pw.writeShort(0);// Equip Inventory
         }
-        pw.writeShort(0);
+        
         for (Item item : equipped) {
             if ((item.getPosition() <= -1000) && (item.getPosition() > -1100)) {
                 addItemPosition(pw, item, false, false);
@@ -376,6 +414,7 @@ public class PacketHelper {
             }
         }
         pw.writeShort(0);
+        
         for (Item item : equipped) {
             if ((item.getPosition() <= -1100) && (item.getPosition() > -1200)) {
                 addItemPosition(pw, item, false, false);
@@ -412,12 +451,14 @@ public class PacketHelper {
             addItemInfo(pw, item, chr);
         }
         pw.write(0);
+        
         iv = chr.getInventory(MapleInventoryType.SETUP);
         for (Item item : iv.list()) {
             addItemPosition(pw, item, false, false);
             addItemInfo(pw, item, chr);
         }
         pw.write(0);
+        
         iv = chr.getInventory(MapleInventoryType.ETC);
         for (Item item : iv.list()) {
             if (item.getPosition() < 100) {
@@ -426,24 +467,31 @@ public class PacketHelper {
             }
         }
         pw.write(0);
+        
         iv = chr.getInventory(MapleInventoryType.CASH);
         for (Item item : iv.list()) {
             addItemPosition(pw, item, false, false);
             addItemInfo(pw, item, chr);
         }
         pw.write(0);
-//        for (int i = 0; i < chr.getExtendedSlots().size(); i++) {
-//            pw.writeInt(i);
-//            pw.writeInt(chr.getExtendedSlot(i));
-//            for (Item item : chr.getInventory(MapleInventoryType.ETC).list()) {
-//                if ((item.getPosition() > i * 100 + 100) && (item.getPosition() < i * 100 + 200)) {
-//                    addItemPosition(pw, item, false, true);
-//                    addItemInfo(pw, item, chr);
-//                }
-//            }
-//            pw.writeInt(-1);
-//        }
-        pw.write(new byte[21]); // new
+        
+        pw.writeInt(chr.getExtendedSlots().size());
+        for (int i = 0; i < chr.getExtendedSlots().size(); i++) {
+            pw.writeInt(i);
+            pw.writeInt(chr.getExtendedSlot(i));
+            for (Item item : chr.getInventory(MapleInventoryType.ETC).list()) {
+                if ((item.getPosition() > i * 100 + 100) && (item.getPosition() < i * 100 + 200)) {
+                    addItemPosition(pw, item, false, true);
+                    addItemInfo(pw, item, chr);
+                }
+            }
+            pw.writeInt(-1);
+        }
+
+        pw.writeInt(0);// size for int + long
+        pw.writeInt(0);// size for long + long
+        
+        pw.write(new byte[9]);
     }
 
     public static void addPotionPotInfo(PacketWriter pw, MapleCharacter chr) {
@@ -458,7 +506,6 @@ public class PacketHelper {
             pw.writeInt(p.getHp());
             pw.writeInt(0);
             pw.writeInt(p.getMp());
-
             pw.writeLong(PacketHelper.getTime(p.getStartDate()));
             pw.writeLong(PacketHelper.getTime(p.getEndDate()));
         }
@@ -481,8 +528,8 @@ public class PacketHelper {
         pw.writeInt(chr.getHair());
 
         pw.write(-1); // nMixBaseHairColor
-		pw.write(0); // nMixAddHairColor
-		pw.write(0); // nMixHairBaseProb
+        pw.write(0); // nMixAddHairColor
+        pw.write(0); // nMixHairBaseProb
 
         pw.write(chr.getLevel());
         pw.writeShort(chr.getJob());
@@ -516,12 +563,12 @@ public class PacketHelper {
         }
         
         pw.write(chr.getFatigue());
-        pw.writeInt(GameConstants.getCurrentDate());
+        pw.writeInt(GameConstants.getCurrentDate());// nLastFatigueUpdateTime
         for (MapleTrait.MapleTraitType t : MapleTrait.MapleTraitType.values()) {
             pw.writeInt(chr.getTrait(t).getTotalExp());
         }
         for (MapleTrait.MapleTraitType t : MapleTrait.MapleTraitType.values()) {
-            pw.writeShort(0); //today's stats
+            pw.writeShort(0); //today's stats (DayLimit)
         }
         pw.write(0);
         pw.writeLong(getTime(-2));
@@ -547,8 +594,20 @@ public class PacketHelper {
         
         pw.writeReversedLong(getTime(System.currentTimeMillis())); // account last login
         
-        // is this character burning	
+
+        // Character Burning  (?)	
         pw.write(0); 
+        
+        // v179.2
+        pw.writeInt(0);
+        pw.writeInt(0);
+        pw.writeInt(0);
+        pw.writeInt(0);
+        pw.writeInt(0);
+        pw.writeInt(0);
+        pw.writeInt(0);
+        pw.writeInt(0);
+        pw.writeInt(0);
     }
 
     public static void addCharLook(PacketWriter pw, MapleCharacterLook chr, boolean mega, boolean second) {
@@ -601,28 +660,27 @@ public class PacketHelper {
 		    totemEquip.put(Byte.valueOf(pos), totem.getValue());
 	    }
 	
-    	// System.out.println("There are " + myEquip.entrySet().size() + " pieces of equipment.");
-	    for (Map.Entry entry : myEquip.entrySet()) {
-	        int weapon = ((Integer) entry.getValue()).intValue();
+	    for (Map.Entry<Byte, Integer> entry : myEquip.entrySet()) {
+	        int weapon = (entry.getValue()).intValue();
 		    if (GameConstants.getWeaponType(weapon) == (second ? MapleWeaponType.LONG_SWORD : MapleWeaponType.BIG_SWORD)) {
 		        continue;
 		    }
-		    pw.write(((Byte) entry.getKey()).byteValue());
-		    pw.writeInt(((Integer) entry.getValue()).intValue());
+		    pw.write(entry.getKey().byteValue());
+		    pw.writeInt(entry.getValue().intValue());
 	    }
 	    
 	    pw.write(255);
 	
-	    for (Map.Entry entry : maskedEquip.entrySet()) {
-	        pw.write(((Byte) entry.getKey()).byteValue());
-	        pw.writeInt(((Integer) entry.getValue()).intValue());
+	    for (Map.Entry<Byte, Integer> entry : maskedEquip.entrySet()) {
+	    	pw.write(entry.getKey().byteValue());
+	        pw.writeInt(entry.getValue().intValue());
 	    }
 	    
 	    pw.write(255);
 	
-	    for (Map.Entry entry : totemEquip.entrySet()) {
-	        pw.write(((Byte) entry.getKey()).byteValue());
-	        pw.writeInt(((Integer) entry.getValue()).intValue());
+	    for (Map.Entry<Byte, Integer> entry : totemEquip.entrySet()) {
+	        pw.write(entry.getKey().byteValue());
+	        pw.writeInt(entry.getValue().intValue());
 	    }
 	    
 	    pw.write(255);
@@ -650,14 +708,6 @@ public class PacketHelper {
 	        pw.write(1);
 	    }
 	    
-	    /*
-	     if (JobConstants.isBeastTamer(chr.getJob())) { // tale and ears
-			pw.write(1);
-			pw.writeInt(5010116);
-			pw.write(1);
-			pw.writeInt(5010119);
-		 }
-	     */
 	    pw.write(0); // mixed hair color
 	    pw.write(0); // mixed hair percent
 	}
@@ -984,8 +1034,8 @@ public class PacketHelper {
     }
 
     public static void addCharacterInfo(PacketWriter pw, MapleCharacter chr) {
-        long mask = 0xFF_FF_FF_FF_FF_FF_FF_FFL;
-        pw.writeLong(mask);
+        long dbcharFlag = 0xFF_FF_FF_FF_FF_FF_FF_FFL;
+        pw.writeLong(dbcharFlag);
 
         // combat orders
         pw.write(0);
@@ -995,16 +1045,17 @@ public class PacketHelper {
             pw.writeInt(0);
         }
         
-        pw.write(0);
+        pw.write(0);// List of nPvPExp_CS maybe
         
-        pw.write(0);
+        pw.writeInt(0); // List of nWillEXP_CS maybe
         
-        pw.writeInt(0);
+        pw.write(0);// GW_Core
+        
         
         // ?
         pw.write(0);
         
-        if ((mask & 1) != 0) {
+        if ((dbcharFlag & 1) != 0) {
             addCharStats(pw, chr);
 
             pw.write(chr.getBuddylist().getCapacity());
@@ -1026,74 +1077,115 @@ public class PacketHelper {
             }
         }
         
-        if ((mask & 2) != 0) {
+        if ((dbcharFlag & 2) != 0) {
         	pw.writeLong(chr.getMeso());
         }
         
-        if ((mask & 8) != 0) {
-            addInventoryInfo(pw, chr);
+        if ((dbcharFlag & 8) != 0) {
+            addInventoryInfo(pw, chr, dbcharFlag);
         }
         
-        if ((mask & 0x100) != 0) {
+        if ((dbcharFlag & 0x100) != 0) {
             addSkillInfo(pw, chr);
         }
         
-        if ((mask & 0x8000) != 0) {
+        if ((dbcharFlag & 0x8000) != 0) {
             addCoolDownInfo(pw, chr);
         }
         
-        if ((mask & 0x200) != 0) {
+        if ((dbcharFlag & 0x200) != 0) {
             addStartedQuestInfo(pw, chr);
         }
         
-        if ((mask & 0x4000) != 0) {
+        if ((dbcharFlag & 0x4000) != 0) {
             addCompletedQuestInfo(pw, chr);
         }
         
-        if ((mask & 0x400) != 0) {
-            pw.writeShort(0);
+        if ((dbcharFlag & 0x400) != 0) {
+            addMiniGameRecord(pw);
         }
         
-        if ((mask & 0x800) != 0) {
+        if ((dbcharFlag & 0x800) != 0) {
             addRingInfo(pw, chr);
         }
         
-        if ((mask & 0x1000) != 0) {
+        if ((dbcharFlag & 0x1000) != 0) {
             addRocksInfo(pw, chr);
         }
         
-        if ((mask & 0x20000) != 0) {
+        if ((dbcharFlag & 0x20000) != 0) {
             pw.writeInt(0);
         }
         
-        if ((mask & 0x10000) != 0) {
+        if ((dbcharFlag & 0x10000) != 0) {
             addMonsterBookInfo(pw, chr);
         }
-
-        // ?
-        pw.writeShort(0);
         
-        // ?
-        pw.writeInt(0);
+        if ((dbcharFlag & 0x4000000) != 0) {
+            int unknown = 0;
+            pw.writeShort(unknown);
+            for (int i = 0; i < unknown; i++) {
+                pw.writeShort(0);
+            }
+        }
         
         
-        if ((mask & 0x80000) != 0) {
+        if ((dbcharFlag & 0x8000000) != 0) {
+            int unknown = 0;
+            pw.writeInt(unknown);
+            for (int i = 0; i < unknown; i++) {
+               pw.writeInt(0);
+               pw.writeInt(0);
+               pw.writeAsciiString("", 13);
+               pw.write(0);
+               pw.writeShort(0);
+               pw.writeInt(0);
+               pw.writeLong(0);
+               pw.writeLong(0);
+               pw.writeLong(0);
+               pw.writeShort(0);
+            }
+        }
+        
+        if ((dbcharFlag & 0x800000) != 0) {
         	pw.writeShort(0);
         }
         
-        if ((mask & 0x40000) != 0) {
+        if ((dbcharFlag & 0x40000) != 0) {
             chr.QuestInfoPacket(pw);
         }
         
-        if ((mask & 0x2000) != 0) {
-        	pw.writeShort(0);
-        }
-
-        if ((mask & 0x1000) != 0) {
-        	pw.writeInt(0);
+        if ((dbcharFlag & 0x2000) != 0) {
+            int unknown = 0;// maybe character clones?
+            pw.writeShort(0);
+            for (int i = 0; i < unknown; i++) {
+                pw.writeInt(0);// Character ID I guess
+                PacketHelper.addCharLook(pw, chr, false, false);
+            }
         }
         
-        if ((mask & 0x200000) != 0) {
+        if ((dbcharFlag & 0x100) != 0) {
+            int CSimpleStrMap = 0;
+            if (CSimpleStrMap > 0) {
+                int CSimpleStrMap_Size = 0;
+                pw.writeInt(CSimpleStrMap_Size);
+                for (int i = 0; i < CSimpleStrMap_Size; i++) {
+                    pw.writeInt(0);// Map Id
+                    pw.writeMapleAsciiString("");// Simple Str Map
+                }
+            }
+        }
+        
+        if ((dbcharFlag & 0x1000) != 0) {
+            int unknown = 0;
+            pw.writeInt(unknown);
+            for (int i = 0; i < unknown; i++) {
+                pw.writeInt(0);
+                pw.writeInt(0);
+            }
+        }
+        
+        if ((dbcharFlag & 0x200000) != 0) {
             addJaguarInfo(pw, chr);
         }
         
@@ -1103,104 +1195,116 @@ public class PacketHelper {
             //chr.getStat().zeroData(pw, chr);
         }
 
-        if ((mask & 0x4000000) != 0) {
-        	pw.writeShort(0);
+        if ((dbcharFlag & 0x4000000) != 0) {
+            int GW_NpcShopBuyLimit_Size = 0;
+            pw.writeShort(GW_NpcShopBuyLimit_Size);
+            for (int i = 0; i < GW_NpcShopBuyLimit_Size; i++) {
+                int BuyLimitData_Size = 0;
+                pw.writeShort(BuyLimitData_Size);
+                pw.writeInt(0);// dwNPCID
+                for (int j = 0; j < BuyLimitData_Size; j++) {
+                    pw.writeInt(0);// dwNPCID
+                    pw.writeShort(0);// nItemIndex
+                    pw.writeInt(0);// nItemID
+                    pw.writeShort(0);// nCount
+                    pw.writeLong(0);// ftDate
+                }
+            }
         }
 
-        if ((mask & 0x10000000) != 0) {
+        if ((dbcharFlag & 0x10000000) != 0) {
             addStealSkills(pw, chr);
         }
         
-        if ((mask & 0x80000000) != 0) {
+        if ((dbcharFlag & 0x80000000) != 0) {
             addAbilityInfo(pw, chr);
         }
         
-        if ((mask & 0x10000) != 0) {
-        	pw.writeShort(0);
+        if ((dbcharFlag & 0x10000) != 0) {
+            int GW_SoulCollection = 0;
+            pw.writeShort(GW_SoulCollection);
+            for (int i = 0; i < GW_SoulCollection; i++) {
+                pw.writeInt(0);// nPage
+                pw.writeInt(0);// nSetSoul
+            }
+        }
+        
+        int MonsterLifeInviteInfo = 0;
+        pw.writeInt(MonsterLifeInviteInfo);
+        for (int i = 0; i < MonsterLifeInviteInfo; i++) {
+            pw.writeMapleAsciiString("");// unknown
+            addMonsterLifeInviteInfo(pw);
         }
 
-        // ...
-        pw.writeInt(0);
-        
-        // ...
-        pw.write(0);
+        pw.write(0);// craft exp ? ;/
 
-        if ((mask & 0x1) != 0) {
-        	pw.writeInt(chr.getHonorLevel()); // honor level
+        if ((dbcharFlag & 0x1) != 0) {
+            pw.writeInt(chr.getHonorLevel()); // honor level
             pw.writeInt(chr.getHonourExp()); // honor xp
         }
         
-        if ((mask & 0x2) != 0) {
-        	pw.write(1);
-        	pw.writeShort(0);
+        if ((dbcharFlag & 0x2) != 0) {
+            addEntryRecordInfo(pw);
         }
         
-        if ((mask & 0x4) != 0) {
-        	pw.write(0);
+        if ((dbcharFlag & 0x4) != 0) {
+            addReturnEffectInfo(pw);
         }
         
-        // 0x08
-        if (GameConstants.isAngelicBuster(chr.getJob())) {
-	        pw.writeInt(21173); //face
-	        pw.writeInt(37141); //hair
-	        pw.writeInt(1051291);
-        } else {
-        	pw.writeInt(0);
-        	pw.writeInt(0);
-        	pw.writeInt(0);
+        if ((dbcharFlag & 0x8) != 0) {
+            addDressUpInfo(pw, chr);
         }
-    	pw.write(0);
-    	pw.writeInt(-1);
-    	pw.writeInt(0);
-    	pw.writeInt(0);
-    	
-        if ((mask & 0x40000) != 0) {
-        	pw.writeInt(1);
+        
+        if ((dbcharFlag & 0x40000) != 0) {
+            pw.writeInt(1);
             pw.writeInt(0);
             pw.writeLong(0);
             pw.writeMapleAsciiString("");
             pw.writeInt(0);
         }
 
-        // ? Core?
-        if ((mask & 0x10) != 0) {
-        	pw.writeShort(0);
-            pw.writeShort(0);
+        if ((dbcharFlag & 0x10) != 0) {
+            int GW_Core_Circuit = 0;
+            pw.writeShort(GW_Core_Circuit);
+            for (int i = 0; i < GW_Core_Circuit; i++) {
+                pw.writeInt(0);// nCoreID
+                pw.writeInt(0);// nLeftCount
+            }
+            int GW_Core_Inven = 0;
+            pw.writeShort(GW_Core_Inven);
+            for (int i = 0; i < GW_Core_Inven; i++) {
+                pw.writeInt(0);// nCoreID
+                pw.writeInt(0);// nLeftCount
+            }
         }
         
         // FARM_POTENTIAL::Decode
-        if ((mask & 0x20) != 0) {
-        	pw.writeInt(0); // farm monsters length (if length > 1 for each monster int id and long expire)
+        if ((dbcharFlag & 0x20) != 0) {
+            addFarmPotentialInfo(pw);
         }
 
         // FarmUserInfo::Decode
         // FarmSubInfo::Decode
-        if ((mask & 0x40) != 0) {
-        	addFarmInfo(pw, chr.getClient(), (byte) 2);
+        if ((dbcharFlag & 0x40) != 0) {
+            addFarmInfo(pw, chr.getClient(), (byte) 2);
             pw.writeInt(0);
             pw.writeInt(0);
         }
 
         // MemorialCubeInfo::Decode
-        if ((mask & 0x80) != 0) {
-        	pw.write(0);
+        if ((dbcharFlag & 0x80) != 0) {
+            addMemorialCubeInfo(pw);
         }
 
         // GW_LikePoint::Decode
-        if ((mask & 0x400) != 0) {
-        	pw.writeInt(0);
-            pw.writeLong(getTime(-2));
-            pw.writeInt(0);
+        if ((dbcharFlag & 0x400) != 0) {
+            pw.writeInt(0);// nPoint
+            pw.writeLong(getTime(-2));// ftIncTime
+            pw.writeInt(0);// nSeason
         }
 
-        // RunnerGameRecord::Decode
-        if ((mask & 0x20000) != 0) {
-        	pw.writeInt(chr.getId());
-            pw.writeInt(0); 
-            pw.writeInt(0);
-            pw.writeInt(0);
-            pw.writeLong(getTime(-2));
-            pw.writeInt(0);
+        if ((dbcharFlag & 0x20000) != 0) {
+            addRunnerGameRecord(pw, chr.getId());
         }
         
         // ...
@@ -1214,33 +1318,57 @@ public class PacketHelper {
         // DecodeTextEquipInfo													
         pw.writeInt(0);
         
-        if ((mask & 0x8000000) != 0) {
-        	pw.write(1);
-        	pw.write(0);
-        	pw.writeInt(1);
-        	pw.writeInt(0);
-        	pw.writeInt(100);
-        	pw.writeLong(getTime(-1));
-        	pw.writeShort(0);
+        if ((dbcharFlag & 0x100000) != 0) {
+            int unknown = 0;
+            pw.writeShort(unknown);
+            for (int i = 0; i < unknown; i++) {
+                pw.writeInt(0);
+                pw.writeInt(0);
+            }
+        }
+        
+        if ((dbcharFlag & 0x200000) != 0) {
+            int unknown = 0;
+            pw.writeInt(0);
+            for (int i = 0; i < unknown; i++) {
+                pw.writeLong(0);
+                pw.writeInt(0);
+                pw.writeInt(0);
+                pw.writeInt(0);
+                pw.writeInt(0);
+                pw.writeInt(0);
+                pw.writeInt(0);
+                pw.writeInt(0);
+            }
+        }
+        
+        if ((dbcharFlag & 0x8000000) != 0) {
+            pw.write(1);
+            pw.write(0);
+            pw.writeInt(1);
+            pw.writeInt(0);
+            pw.writeInt(100);
+            pw.writeLong(getTime(-1));
+            pw.writeShort(0);
             pw.writeShort(0);
         }
         
-        if ((mask & 0x10000000) != 0) {
-        	pw.write(0);
+        if ((dbcharFlag & 0x10000000) != 0) {
+            pw.write(0);
         }
         
-        if ((mask & 0x20000000) != 0) {
-        	pw.writeInt(0);
-        	pw.writeInt(0);
+        if ((dbcharFlag & 0x20000000) != 0) {
+            pw.writeInt(0);
+            pw.writeInt(0);
         }
 
-        if ((mask & 0x2000) != 0) {
+        if ((dbcharFlag & 0x2000) != 0) {
             addCoreAura(pw, chr); //84 bytes + boolean (85 total)
             pw.write(1);
         }
         
-        if ((mask & 0x100000) != 0) {
-        	pw.writeShort(0); //for <short> length write 2 shorts
+        if ((dbcharFlag & 0x100000) != 0) {
+            pw.writeShort(0); //for <short> length write 2 shorts
         }
 
         // red leaf information
@@ -1265,7 +1393,88 @@ public class PacketHelper {
         }
         return 0;
     }
-
+    
+    public static void addRunnerGameRecord(final PacketWriter pw, int dwCharacterID) {
+        pw.writeInt(dwCharacterID);
+        pw.writeInt(0);// nLastScore
+        pw.writeInt(0);// nHighscore
+        pw.writeInt(0);// nRunnerPoint
+        pw.writeLong(getTime(-2));// tLastPlayed
+        pw.writeInt(0);// nTotalLeft
+    }
+    
+    public static void addMemorialCubeInfo(final PacketWriter pw) {
+        boolean usedMemorialCube = false;
+        pw.write(usedMemorialCube);
+        if (usedMemorialCube) {
+            addItemPosition(pw, null, false, false);
+            addItemInfo(pw, null, null);
+            pw.writeInt(0);// nCubeItemID
+            pw.writeInt(0);// nEItemPOS
+        }
+    }
+    
+    public static void addFarmPotentialInfo(final PacketWriter pw) {
+        int MonsterList = 0;
+        pw.writeInt(MonsterList);
+        for (int i = 0; i < MonsterList; i++) {
+            pw.writeInt(0);// dwMonsterID
+            pw.writeLong(0);// potentialExpire
+        }
+    }
+    
+    public static void addDressUpInfo(final PacketWriter pw, final MapleCharacter chr) {
+        if (GameConstants.isAngelicBuster(chr.getJob())) {
+            pw.writeInt(21173); // nFace
+            pw.writeInt(37141); // nHair
+            pw.writeInt(1051291);// nClothe
+        } else {
+            pw.writeInt(0);// nFace
+            pw.writeInt(0);// nHair
+            pw.writeInt(0);// nClothe
+        }
+        pw.write(0);// nSkin
+        pw.writeInt(-1);// nMixBaseHairColor
+        pw.writeInt(0);// nMixAddHairColor
+        pw.writeInt(0);// nMixHairBaseProb
+    }
+    
+    public static void addReturnEffectInfo(final PacketWriter pw) {
+        boolean hasReturnItem = false;
+        pw.write(hasReturnItem);
+        if (hasReturnItem) {
+            addItemPosition(pw, null, false, false);
+            addItemInfo(pw, null, null);
+            pw.writeInt(0);// nUsedItemID
+        }
+    }
+    
+    public static void addEntryRecordInfo(final PacketWriter pw) {
+        boolean modified = true;
+        pw.write(modified);
+        int EntryRecords = 0;
+        pw.writeShort(EntryRecords);
+        for (int i = 0; i < EntryRecords; i++) {
+            pw.writeShort(0);//nCategory
+            int items = 0;
+            pw.writeShort(items);
+            for (int j = 0; j < items; j++) {
+                pw.writeInt(0);// nItemID
+                pw.writeInt(0);// nCount
+            }
+        }
+    }    
+    
+    public static void addMonsterLifeInviteInfo(final PacketWriter pw) {
+        pw.writeInt(0);// dwOwnerAID
+        pw.writeMapleAsciiString("");// sOwnerName
+        int unknown = 0;
+        pw.write(0);
+        for (int i = 0; i < unknown; i++) {
+            pw.write(0);// buynode ? dafq 
+        }
+    }
+    
     public static void addAbilityInfo(final PacketWriter pw, MapleCharacter chr) {
         final List<InnerSkillValueHolder> skills = chr.getInnerSkills();
         pw.writeShort(skills.size());
@@ -1547,7 +1756,7 @@ public class PacketHelper {
             pw.writeInt(0);
         }
     }
-
+    
     public static void addZeroInfo(PacketWriter pw, MapleCharacter chr) {
         short mask = 0;
         pw.writeShort(mask);

@@ -713,7 +713,7 @@ public class ItemMakerHandler {
                             if (GameConstants.getInventoryType(toGet) == MapleInventoryType.EQUIP) {
                                 Equip first = (Equip) ii.getEquipById(toGet);
                                 if (Randomizer.nextInt(100) < (theLevl * 2)) {
-                                    first = (Equip) ii.randomizeStats(first);
+                                    first = ii.randomizeStats(first);
                                     cr = CraftRanking.COOL;
                                 }
                                 if (Randomizer.nextInt(100) < (theLevl * (first.getUpgradeSlots() > 0 ? 2 : 1))) {

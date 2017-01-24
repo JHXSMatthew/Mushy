@@ -30,7 +30,6 @@ import client.SkillFactory;
 import constants.GameConstants;
 import server.MapleStatEffect;
 import tools.AttackPair;
-import tools.HexTool;
 
 public class AttackInfo {
 
@@ -83,38 +82,10 @@ public class AttackInfo {
             return null;
         }
         
-        int dd = ((display & 0x8000) != 0 ? (display - 0x8000) : display);
         if (GameConstants.isLinkedAttackSkill(skillid)) {
             final Skill skillLink = SkillFactory.getSkill(skillid);
-            if (1 == 1) { //is bugged after red
                 return skillLink.getEffect(skillLevel);
-            }
-
-            if (dd > SkillFactory.Delay.magic6.i && dd != SkillFactory.Delay.shot.i && dd != SkillFactory.Delay.fist.i) {
-                
-            	if (skillLink.getAnimation() == -1 || Math.abs(skillLink.getAnimation() - dd) > 0x10) {
-                    chr.dropMessage(-1, "Animation: " + skillLink.getAnimation() + " | " + HexTool.getOpcodeToString(skillLink.getAnimation()));
-                    
-                    if (skillLink.getAnimation() == -1) {
-                        chr.dropMessage(5, "Please report this: animation for skill " + skillLink.getId() + " doesn't exist");
-                    } else {
-                        //AutobanManager.getInstance().autoban(chr.getClient(), "No delay hack, SkillID : " + skillLink.getId() + ", animation: " + dd + ", expected: " + skillLink.getAnimation());
-                    }
-                    
-                    if (skill_.getId() == 24121003) {
-                        return skillLink.getEffect(skillLevel);
-                    }
-                    
-                    if (GameConstants.isZero(skill_.getId() / 10000)) {
-                        return skillLink.getEffect(skillLevel);
-                    }
-                    
-                    return null;
-                }
-                
-            }
-            return skillLink.getEffect(skillLevel);
-        } 
+            } 
         return skill_.getEffect(skillLevel);
     }
 }

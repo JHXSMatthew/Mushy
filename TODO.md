@@ -1,4 +1,15 @@
-# Mushy Todo
+# Mushy Developer Notes
+
+# Server
+
+### Other
+- [ ] Recode packet handling system
+- [ ] Removal of Packet Handler in ServerHandler 
+- [ ] Removal of XMLWZ -> Possible NX Or MCDB (Pending Response).
+- [ ] Removal of features that unavailable in gameplay anymore that has been obsolete for more then a decade.
+- [ ] Scripting -> Switch Scripting Langage ? Groovy ? (Pending Response).
+
+# Gameplay
 
 ### Character
 - [ ] Damage Skins (Savion)
@@ -29,7 +40,6 @@
 - [ ] Monster skills
 - [ ] Spine mobs
 
-### Other
+### Cash
 - [ ] Cash shop item searching
 - [ ] Cash shop purchasing item
-- [ ] Recode packet handling system

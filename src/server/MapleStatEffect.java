@@ -1311,7 +1311,7 @@ public class MapleStatEffect implements Serializable {
                 ret.statups.put(MapleBuffStat.KeyDownAreaMoving, Integer.valueOf(3));
                 break;
             case 27111006:
-                ret.statups.put(MapleBuffStat.EMMP, Integer.valueOf(-((Integer) ret.info.get(MapleStatInfo.emad)).intValue()));
+                ret.statups.put(MapleBuffStat.EMMP, Integer.valueOf(-ret.info.get(MapleStatInfo.emad).intValue()));
                 break;
             case 30010242:
                 ret.statups.put(MapleBuffStat.Larkness, Integer.valueOf(1));
@@ -1397,11 +1397,11 @@ public class MapleStatEffect implements Serializable {
                 ret.statups.put(MapleBuffStat.IncMaxDamage, ret.info.get(MapleStatInfo.indieMaxDamageOver));
                 break;     
             case 61101004:
-                ret.statups.put(MapleBuffStat.Booster, Integer.valueOf(-((Integer) ret.info.get(MapleStatInfo.x)).intValue()));
+                ret.statups.put(MapleBuffStat.Booster, Integer.valueOf(-ret.info.get(MapleStatInfo.x).intValue()));
                 break;
             case 61111003:
-                ret.statups.put(MapleBuffStat.AsrR, Integer.valueOf(-((Integer) ret.info.get(MapleStatInfo.asrR)).intValue()));
-                ret.statups.put(MapleBuffStat.TerR, Integer.valueOf(-((Integer) ret.info.get(MapleStatInfo.terR)).intValue()));
+                ret.statups.put(MapleBuffStat.AsrR, Integer.valueOf(-ret.info.get(MapleStatInfo.asrR).intValue()));
+                ret.statups.put(MapleBuffStat.TerR, Integer.valueOf(-ret.info.get(MapleStatInfo.terR).intValue()));
                 break;
             case 60001216:
                 ret.info.put(MapleStatInfo.time, Integer.valueOf(2100000000));
@@ -1480,7 +1480,7 @@ public class MapleStatEffect implements Serializable {
                 break;
             case 13121005:
             case 33121004:
-                ret.statups.put(MapleBuffStat.SharpEyes, Integer.valueOf((((Integer) ret.info.get(MapleStatInfo.x)).intValue() << 8) + ((Integer) ret.info.get(MapleStatInfo.criticaldamageMax)).intValue()));
+                ret.statups.put(MapleBuffStat.SharpEyes, Integer.valueOf((ret.info.get(MapleStatInfo.x).intValue() << 8) + ret.info.get(MapleStatInfo.criticaldamageMax).intValue()));
                 break;
             case 5321054:
                 ret.statups.put(MapleBuffStat.AttackCountX, ret.info.get(MapleStatInfo.x));

@@ -101,7 +101,7 @@ public final class MonsterBook
         level = 10;
         for (byte i = 0; i < 10; i++) {
             if (GameConstants.getSetExpNeededForLevel(i) > setScore) {
-                level = (byte) i;
+                level = i;
                 break;
             }
         }

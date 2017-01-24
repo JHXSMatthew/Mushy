@@ -135,7 +135,7 @@ public class MapleReactor extends MapleMapObject {
     }
 
     public void forceHitReactor(final byte newState) {
-        setState((byte) newState);
+        setState(newState);
         setTimerActive(false);
         map.broadcastMessage(CField.triggerReactor(this, (short) 0, 0));
     }

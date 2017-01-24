@@ -101,7 +101,7 @@ public class CashShop implements Serializable {
         if (GameConstants.getInventoryType(cItem.getId()) == MapleInventoryType.EQUIP) {
             Equip eq = (Equip) MapleItemInformationProvider.getInstance().getEquipById(cItem.getId(), uniqueid);
             if (period > 0) {
-                eq.setExpiration((long) (System.currentTimeMillis() + (long) (period * 24 * 60 * 60 * 1000)));
+                eq.setExpiration(System.currentTimeMillis() + period * 24 * 60 * 60 * 1000);
             }
             eq.setGMLog("Cash Shop: " + cItem.getSN() + " on " + FileoutputUtil.CurrentReadable_Date());
             eq.setGiftFrom(gift);
@@ -115,7 +115,7 @@ public class CashShop implements Serializable {
         } else {
             Item item = new Item(cItem.getId(), (byte) 0, (short) cItem.getCount(), (byte) 0, uniqueid);
             if (period > 0) {
-                item.setExpiration((long) (System.currentTimeMillis() + (long) (period * 24 * 60 * 60 * 1000)));
+                item.setExpiration(System.currentTimeMillis() + period * 24 * 60 * 60 * 1000);
             }
             item.setGMLog("Cash Shop: " + cItem.getSN() + " on " + FileoutputUtil.CurrentReadable_Date());
             item.setGiftFrom(gift);
@@ -149,7 +149,7 @@ public class CashShop implements Serializable {
         if (GameConstants.getInventoryType(cItem.getItemId()) == MapleInventoryType.EQUIP) {
             Equip eq = (Equip) MapleItemInformationProvider.getInstance().getEquipById(cItem.getItemId(), uniqueid);
             if (period > 0) {
-                eq.setExpiration((long) (System.currentTimeMillis() + (long) (period * 24 * 60 * 60 * 1000)));
+                eq.setExpiration(System.currentTimeMillis() + period * 24 * 60 * 60 * 1000);
             }
             eq.setGMLog("Cash Shop: " + cItem.getSN() + " on " + FileoutputUtil.CurrentReadable_Date());
             eq.setGiftFrom(gift);
@@ -163,7 +163,7 @@ public class CashShop implements Serializable {
         } else {
             Item item = new Item(cItem.getItemId(), (byte) 0, (short) cItem.getQuantity(), (byte) 0, uniqueid);
             if (period > 0) {
-                item.setExpiration((long) (System.currentTimeMillis() + (long) (period * 24 * 60 * 60 * 1000)));
+                item.setExpiration(System.currentTimeMillis() + period * 24 * 60 * 60 * 1000);
             }
             item.setGMLog("Cash Shop: " + cItem.getSN() + " on " + FileoutputUtil.CurrentReadable_Date());
             item.setGiftFrom(gift);

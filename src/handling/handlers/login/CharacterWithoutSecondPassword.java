@@ -18,11 +18,6 @@ public class CharacterWithoutSecondPassword {
         lea.readByte(); // 1?
         final int charid = lea.readInt();
         
-        /*if (view) {
-            c.setChannel(1);
-            c.setWorld(lea.readInt());
-        }*/
-        
         final String currentpw = c.getSecondPassword();
         if (!c.isLoggedIn() || loginFailCount(c) || (currentpw != null && !currentpw.equals("")) || !c.login_Auth(charid) || ChannelServer.getInstance(c.getChannel()) == null || !WorldOption.isExists(c.getWorld())) {
             c.getSession().close();

@@ -506,6 +506,8 @@ class MapleQuestAction implements Serializable {
                         case CASH:
                             cash++;
                             break;
+					default:
+						break;
                     }
                 }
             }

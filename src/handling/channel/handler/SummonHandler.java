@@ -181,7 +181,7 @@ public static final void MoveDragon(final LittleEndianAccessor slea, final Maple
             //chr.getCheatTracker().checkSummonAttack();
         }
         final byte animation = slea.readByte();
-        byte tbyte = (byte) (slea.readByte());
+        byte tbyte = (slea.readByte());
         byte numAttacked = (byte) ((tbyte >>> 4) & 0xF);
         if (sse != null && numAttacked > sse.mobCount) {
             chr.dropMessage(5, "Warning: Attacking more monster than summon can do");

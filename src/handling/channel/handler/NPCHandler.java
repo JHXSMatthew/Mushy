@@ -141,7 +141,7 @@ public class NPCHandler {
                     c.getSession().write(CField.NPCPacket.getStorageFull());
                     return;
                 }
-                if (chr.getInventory(type).getItem((short) slot) == null) {
+                if (chr.getInventory(type).getItem(slot) == null) {
                     c.getSession().write(CWvsContext.enableActions());
                     return;
                 }
@@ -149,7 +149,7 @@ public class NPCHandler {
                 if (chr.getMeso() < 100L) {
                     chr.dropMessage(1, "You don't have enough mesos to store the item");
                 } else {
-                    Item item = chr.getInventory(type).getItem((short) slot).copy();
+                    Item item = chr.getInventory(type).getItem(slot).copy();
 
                     if (GameConstants.isPet(item.getItemId())) {
                         c.getSession().write(CWvsContext.enableActions());
@@ -179,7 +179,7 @@ public class NPCHandler {
                             quantity = item.getQuantity();
                         }
                         chr.gainMeso(-100L, false, false);
-                        MapleInventoryManipulator.removeFromSlot(c, type, (short) slot, quantity, false);
+                        MapleInventoryManipulator.removeFromSlot(c, type, slot, quantity, false);
                         item.setQuantity(quantity);
                         storage.store(item);
                     } else {

@@ -694,7 +694,7 @@ public class PlayersHandler {
                         return;
                     }
                 } else {
-                    if (!MapleInventoryManipulator.addById(c, itemId, (short) quantity, "BUY_SILENT_CRUSADE")) {
+                    if (!MapleInventoryManipulator.addById(c, itemId, quantity, "BUY_SILENT_CRUSADE")) {
                         c.getSession().write(CWvsContext.getSilentCrusadeMsg((byte) 2));
                         c.getSession().write(CWvsContext.enableActions());
                         return;

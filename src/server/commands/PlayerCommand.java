@@ -40,6 +40,10 @@ public class PlayerCommand {
 			return 1;
 		}
 	}
+	
+	public static class Ea extends Dispose {
+		
+	}
 
 	public static class ExpFix extends CommandExecute {
 
@@ -147,6 +151,8 @@ public class PlayerCommand {
 				int hair = amount;
 				player.setSecondHair(hair);
 				player.updateSingleStat(MapleStat.HAIR, player.getSecondHair());
+				break;
+			default:
 				break;
 			}
 		}

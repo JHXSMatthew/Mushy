@@ -329,10 +329,10 @@ public class PlayerStats implements Serializable {
                 }
             }
             if (equip.getDurability() > 0) {
-                durabilityHandling.add((Equip) equip);
+                durabilityHandling.add(equip);
             }
             if (GameConstants.getMaxLevel(equip.getItemId()) > 0 && (GameConstants.getStatFromWeapon(equip.getItemId()) == null ? (equip.getEquipLevel() <= GameConstants.getMaxLevel(equip.getItemId())) : (equip.getEquipLevel() < GameConstants.getMaxLevel(equip.getItemId())))) {
-                equipLevelHandling.add((Equip) equip);
+                equipLevelHandling.add(equip);
             }
         }
         final Iterator<Entry<Integer, Integer>> iter = setHandling.entrySet().iterator();
@@ -771,7 +771,7 @@ public class PlayerStats implements Serializable {
                 bx = SkillFactory.getSkill(5311001);
                 bof = chra.getTotalSkillLevel(bx);
                 if (bof > 0) {
-                    damageIncrease.put(5301001, (int) bx.getEffect(bof).getDAMRate());
+                    damageIncrease.put(5301001, bx.getEffect(bof).getDAMRate());
                 }
                 bx = SkillFactory.getSkill(5310007);
                 bof = chra.getTotalSkillLevel(bx);
@@ -810,10 +810,10 @@ public class PlayerStats implements Serializable {
                 bof = chra.getTotalSkillLevel(bx);
                 if (bof > 0) {
                     eff = bx.getEffect(bof);
-                    damageIncrease.put(31000004, (int) eff.getDAMRate());
-                    damageIncrease.put(31001006, (int) eff.getDAMRate());
-                    damageIncrease.put(31001007, (int) eff.getDAMRate());
-                    damageIncrease.put(31001008, (int) eff.getDAMRate());
+                    damageIncrease.put(31000004, eff.getDAMRate());
+                    damageIncrease.put(31001006, eff.getDAMRate());
+                    damageIncrease.put(31001007, eff.getDAMRate());
+                    damageIncrease.put(31001008, eff.getDAMRate());
                 }
                 bx = SkillFactory.getSkill(31100005);
                 bof = chra.getTotalSkillLevel(bx);
@@ -826,10 +826,10 @@ public class PlayerStats implements Serializable {
                 bof = chra.getTotalSkillLevel(bx);
                 if (bof > 0) {
                     eff = bx.getEffect(bof);
-                    damageIncrease.put(31000004, (int) eff.getX());
-                    damageIncrease.put(31001006, (int) eff.getX());
-                    damageIncrease.put(31001007, (int) eff.getX());
-                    damageIncrease.put(31001008, (int) eff.getX());
+                    damageIncrease.put(31000004, eff.getX());
+                    damageIncrease.put(31001006, eff.getX());
+                    damageIncrease.put(31001007, eff.getX());
+                    damageIncrease.put(31001008, eff.getX());
                 }
                 bx = SkillFactory.getSkill(31111007);
                 bof = chra.getTotalSkillLevel(bx);
@@ -873,10 +873,10 @@ public class PlayerStats implements Serializable {
                 bof = chra.getTotalSkillLevel(bx);
                 if (bof > 0) {
                     eff = bx.getEffect(bof);
-                    damageIncrease.put(31000004, (int) eff.getX());
-                    damageIncrease.put(31001006, (int) eff.getX());
-                    damageIncrease.put(31001007, (int) eff.getX());
-                    damageIncrease.put(31001008, (int) eff.getX());
+                    damageIncrease.put(31000004, eff.getX());
+                    damageIncrease.put(31001006, eff.getX());
+                    damageIncrease.put(31001007, eff.getX());
+                    damageIncrease.put(31001008, eff.getX());
                 }
                 bx = SkillFactory.getSkill(31120008);
                 bof = chra.getTotalSkillLevel(bx);
@@ -1547,7 +1547,7 @@ public class PlayerStats implements Serializable {
                 bof = chra.getTotalSkillLevel(bx);
                 if (bof > 0) {
                     eff = bx.getEffect(bof);
-                    damageIncrease.put(2111003, (int) eff.getX());
+                    damageIncrease.put(2111003, eff.getX());
                 }
                 bx = SkillFactory.getSkill(2120009);
                 bof = chra.getTotalSkillLevel(bx);
@@ -1717,7 +1717,7 @@ public class PlayerStats implements Serializable {
                 bx = SkillFactory.getSkill(23110004);
                 bof = chra.getTotalSkillLevel(bx);
                 if (bof > 0) {
-                    damageIncrease.put(23101001, (int) bx.getEffect(bof).getDAMRate());
+                    damageIncrease.put(23101001, bx.getEffect(bof).getDAMRate());
                 }
                 bx = SkillFactory.getSkill(23121004);
                 bof = chra.getTotalSkillLevel(bx);
@@ -1737,7 +1737,7 @@ public class PlayerStats implements Serializable {
                 bx = SkillFactory.getSkill(23120011);
                 bof = chra.getTotalSkillLevel(bx);
                 if (bof > 0) {
-                    damageIncrease.put(23101001, (int) bx.getEffect(bof).getDAMRate());
+                    damageIncrease.put(23101001, bx.getEffect(bof).getDAMRate());
                 }
                 bx = SkillFactory.getSkill(23120012);
                 bof = chra.getTotalSkillLevel(bx);
@@ -1835,9 +1835,9 @@ public class PlayerStats implements Serializable {
                 bof = chra.getTotalSkillLevel(bx);
                 if (bof > 0) { //Savage Blow, Steal, and Assaulter
                     eff = bx.getEffect(bof);
-                    damageIncrease.put(4201005, (int) eff.getDAMRate());
-                    damageIncrease.put(4201004, (int) eff.getDAMRate());
-                    damageIncrease.put(4211002, (int) eff.getDAMRate());
+                    damageIncrease.put(4201005, eff.getDAMRate());
+                    damageIncrease.put(4201004, eff.getDAMRate());
+                    damageIncrease.put(4211002, eff.getDAMRate());
                 }
                 bx = SkillFactory.getSkill(4210012);
                 bof = chra.getTotalSkillLevel(bx);
@@ -1864,13 +1864,13 @@ public class PlayerStats implements Serializable {
                 bof = chra.getTotalSkillLevel(bx);
                 if (bof > 0) { //Fatal Blow, Slash Storm, Tornado Spin, Bloody Storm, Upper Stab, and Flying Assaulter
                     eff = bx.getEffect(bof);
-                    damageIncrease.put(4311002, (int) eff.getDAMRate());
-                    damageIncrease.put(4311003, (int) eff.getDAMRate());
-                    damageIncrease.put(4321000, (int) eff.getDAMRate());
-                    damageIncrease.put(4321001, (int) eff.getDAMRate());
-                    damageIncrease.put(4331000, (int) eff.getDAMRate());
-                    damageIncrease.put(4331004, (int) eff.getDAMRate());
-                    damageIncrease.put(4331005, (int) eff.getDAMRate());
+                    damageIncrease.put(4311002, eff.getDAMRate());
+                    damageIncrease.put(4311003, eff.getDAMRate());
+                    damageIncrease.put(4321000, eff.getDAMRate());
+                    damageIncrease.put(4321001, eff.getDAMRate());
+                    damageIncrease.put(4331000, eff.getDAMRate());
+                    damageIncrease.put(4331004, eff.getDAMRate());
+                    damageIncrease.put(4331005, eff.getDAMRate());
                 }
                 bx = SkillFactory.getSkill(4341006);
                 bof = chra.getTotalSkillLevel(bx);
@@ -1908,8 +1908,8 @@ public class PlayerStats implements Serializable {
                 bof = chra.getTotalSkillLevel(bx);
                 if (bof > 0) {
                     eff = bx.getEffect(bof);
-                    damageIncrease.put(21100002, (int) eff.getDAMRate());
-                    damageIncrease.put(21110003, (int) eff.getDAMRate());
+                    damageIncrease.put(21100002, eff.getDAMRate());
+                    damageIncrease.put(21110003, eff.getDAMRate());
                 }
                 break;
             }
@@ -1919,14 +1919,14 @@ public class PlayerStats implements Serializable {
                 bof = chra.getTotalSkillLevel(bx);
                 if (bof > 0) { //ME-07 Drillhands, Atomic Hammer
                     eff = bx.getEffect(bof);
-                    damageIncrease.put(35001003, (int) eff.getDAMRate());
-                    damageIncrease.put(35101003, (int) eff.getDAMRate());
+                    damageIncrease.put(35001003, eff.getDAMRate());
+                    damageIncrease.put(35101003, eff.getDAMRate());
                 }
                 bx = SkillFactory.getSkill(35121006);
                 bof = chra.getTotalSkillLevel(bx);
                 if (bof > 0) { //Satellite
                     eff = bx.getEffect(bof);
-                    damageIncrease.put(35111001, (int) eff.getDAMRate());
+                    damageIncrease.put(35111001, eff.getDAMRate());
                  //   damageIncrease.put(35111009, (int) eff.getDAMRate());
                  //   damageIncrease.put(35111010, (int) eff.getDAMRate());
                 }
@@ -1972,7 +1972,7 @@ public class PlayerStats implements Serializable {
                 if (bof > 0) {
                     eff = bx.getEffect(bof);
                     watk += eff.getAttackX();
-                    damageIncrease.put(1100002, (int) eff.getDamage());
+                    damageIncrease.put(1100002, eff.getDamage());
                 }
                 break;
             }
@@ -2015,8 +2015,8 @@ public class PlayerStats implements Serializable {
                 bof = chra.getTotalSkillLevel(bx);
                 if (bof > 0) { //Flamethrower and Ice Splitter
                     eff = bx.getEffect(bof);
-                    damageIncrease.put(5211004, (int) eff.getDamage());
-                    damageIncrease.put(5211005, (int) eff.getDamage());
+                    damageIncrease.put(5211004, eff.getDamage());
+                    damageIncrease.put(5211005, eff.getDamage());
                 }
                 break;
             }
@@ -2110,7 +2110,7 @@ public class PlayerStats implements Serializable {
                 if (bof > 0) {
                     eff = bx.getEffect(bof);
                     watk += eff.getAttackX();
-                    damageIncrease.put(51100002, (int) eff.getDamage());
+                    damageIncrease.put(51100002, eff.getDamage());
                 }
 
                 // Mihile 3rd Job Passive Skills

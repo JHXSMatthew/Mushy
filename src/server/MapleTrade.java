@@ -45,16 +45,16 @@ public class MapleTrade {
                 } else if (ItemFlag.KARMA_USE.check(flag)) {
                     item.setFlag((short) (flag - ItemFlag.KARMA_USE.getValue()));
                 }
-                MapleInventoryManipulator.addFromDrop(((MapleCharacter) this.chr.get()).getClient(), item, false);
+                MapleInventoryManipulator.addFromDrop(this.chr.get().getClient(), item, false);
             }
             this.exchangeItems.clear();
         }
         if (this.exchangeMeso > 0) {
-            ((MapleCharacter) this.chr.get()).gainMeso(this.exchangeMeso - GameConstants.getTaxAmount(this.exchangeMeso), false, false);
+            this.chr.get().gainMeso(this.exchangeMeso - GameConstants.getTaxAmount(this.exchangeMeso), false, false);
         }
         this.exchangeMeso = 0;
 
-        ((MapleCharacter) this.chr.get()).getClient().getSession().write(CField.InteractionPacket.TradeMessage(this.tradingslot, (byte) 7));
+        this.chr.get().getClient().getSession().write(CField.InteractionPacket.TradeMessage(this.tradingslot, (byte) 7));
     }
 
     public final void cancel(MapleClient c, MapleCharacter chr) {
@@ -85,10 +85,10 @@ public class MapleTrade {
         if ((this.locked) || (this.partner == null) || (meso <= 0) || (this.meso + meso <= 0)) {
             return;
         }
-        if (((MapleCharacter) this.chr.get()).getMeso() >= meso) {
-            ((MapleCharacter) this.chr.get()).gainMeso(-meso, false, false);
+        if (this.chr.get().getMeso() >= meso) {
+            this.chr.get().gainMeso(-meso, false, false);
             this.meso += meso;
-            ((MapleCharacter) this.chr.get()).getClient().getSession().write(CField.InteractionPacket.getTradeMesoSet((byte) 0, this.meso));
+            this.chr.get().getClient().getSession().write(CField.InteractionPacket.getTradeMesoSet((byte) 0, this.meso));
             if (this.partner != null) {
                 this.partner.getChr().getClient().getSession().write(CField.InteractionPacket.getTradeMesoSet((byte) 1, this.meso));
             }
@@ -100,7 +100,7 @@ public class MapleTrade {
             return;
         }
         this.items.add(item);
-        ((MapleCharacter) this.chr.get()).getClient().getSession().write(CField.InteractionPacket.getTradeItemAdd((byte) 0, item));
+        this.chr.get().getClient().getSession().write(CField.InteractionPacket.getTradeItemAdd((byte) 0, item));
         if (this.partner != null) {
             this.partner.getChr().getClient().getSession().write(CField.InteractionPacket.getTradeItemAdd((byte) 1, item));
         }
@@ -108,27 +108,27 @@ public class MapleTrade {
 
     public final void chat(String message) throws Exception {
         if (!CommandProcessor.processCommand(chr.get().getClient(), message, ServerConstants.CommandType.TRADE)) {
-            ((MapleCharacter) this.chr.get()).dropMessage(-2, ((MapleCharacter) this.chr.get()).getName() + " : " + message);
+            this.chr.get().dropMessage(-2, this.chr.get().getName() + " : " + message);
             if (this.partner != null) {
-                this.partner.getChr().getClient().getSession().write(PlayerShopPacket.shopChat(((MapleCharacter) this.chr.get()).getName() + " : " + message, 1));
+                this.partner.getChr().getClient().getSession().write(PlayerShopPacket.shopChat(this.chr.get().getName() + " : " + message, 1));
             }
         }
-        if (((MapleCharacter) this.chr.get()).getClient().isMonitored()) {
-            World.Broadcast.broadcastGMMessage(CWvsContext.broadcastMsg(6, ((MapleCharacter) this.chr.get()).getName() + " said in trade with " + this.partner.getChr().getName() + ": " + message));
+        if (this.chr.get().getClient().isMonitored()) {
+            World.Broadcast.broadcastGMMessage(CWvsContext.broadcastMsg(6, this.chr.get().getName() + " said in trade with " + this.partner.getChr().getName() + ": " + message));
         } else if ((this.partner != null) && (this.partner.getChr() != null) && (this.partner.getChr().getClient().isMonitored())) {
-            World.Broadcast.broadcastGMMessage(CWvsContext.broadcastMsg(6, ((MapleCharacter) this.chr.get()).getName() + " said in trade with " + this.partner.getChr().getName() + ": " + message));
+            World.Broadcast.broadcastGMMessage(CWvsContext.broadcastMsg(6, this.chr.get().getName() + " said in trade with " + this.partner.getChr().getName() + ": " + message));
         }
     }
 
     public final void chatAuto(String message) {
-        ((MapleCharacter) this.chr.get()).dropMessage(-2, message);
+        this.chr.get().dropMessage(-2, message);
         if (this.partner != null) {
             this.partner.getChr().getClient().getSession().write(PlayerShopPacket.shopChat(message, 1));
         }
-        if (((MapleCharacter) this.chr.get()).getClient().isMonitored()) {
-            World.Broadcast.broadcastGMMessage(CWvsContext.broadcastMsg(6, ((MapleCharacter) this.chr.get()).getName() + " said in trade [Automated] with " + this.partner.getChr().getName() + ": " + message));
+        if (this.chr.get().getClient().isMonitored()) {
+            World.Broadcast.broadcastGMMessage(CWvsContext.broadcastMsg(6, this.chr.get().getName() + " said in trade [Automated] with " + this.partner.getChr().getName() + ": " + message));
         } else if ((this.partner != null) && (this.partner.getChr() != null) && (this.partner.getChr().getClient().isMonitored())) {
-            World.Broadcast.broadcastGMMessage(CWvsContext.broadcastMsg(6, ((MapleCharacter) this.chr.get()).getName() + " said in trade [Automated] with " + this.partner.getChr().getName() + ": " + message));
+            World.Broadcast.broadcastGMMessage(CWvsContext.broadcastMsg(6, this.chr.get().getName() + " said in trade [Automated] with " + this.partner.getChr().getName() + ": " + message));
         }
     }
 
@@ -144,7 +144,7 @@ public class MapleTrade {
     }
 
     public final MapleCharacter getChr() {
-        return (MapleCharacter) this.chr.get();
+        return this.chr.get();
     }
 
     public final int getNextTargetSlot() {
@@ -199,13 +199,13 @@ public class MapleTrade {
                 }
             }
         }
-        tradeItem.setPosition((short) targetSlot);
+        tradeItem.setPosition(targetSlot);
         addItem(tradeItem);
         return true;
     }
 
     private int check() {
-        if (((MapleCharacter) this.chr.get()).getMeso() + this.exchangeMeso < 0L) {
+        if (this.chr.get().getMeso() + this.exchangeMeso < 0L) {
             return 1;
         }
 
@@ -232,13 +232,15 @@ public class MapleTrade {
                         break;
                     case CASH:
                         cash = (byte) (cash + 1);
+				default:
+					break;
                 }
 
-                if ((ii.isPickupRestricted(item.getItemId())) && (((MapleCharacter) this.chr.get()).haveItem(item.getItemId(), 1, true, true))) {
+                if ((ii.isPickupRestricted(item.getItemId())) && (this.chr.get().haveItem(item.getItemId(), 1, true, true))) {
                     return 2;
                 }
             }
-            if ((((MapleCharacter) this.chr.get()).getInventory(MapleInventoryType.EQUIP).getNumFreeSlot() < eq) || (((MapleCharacter) this.chr.get()).getInventory(MapleInventoryType.USE).getNumFreeSlot() < use) || (((MapleCharacter) this.chr.get()).getInventory(MapleInventoryType.SETUP).getNumFreeSlot() < setup) || (((MapleCharacter) this.chr.get()).getInventory(MapleInventoryType.ETC).getNumFreeSlot() < etc) || (((MapleCharacter) this.chr.get()).getInventory(MapleInventoryType.CASH).getNumFreeSlot() < cash)) {
+            if ((this.chr.get().getInventory(MapleInventoryType.EQUIP).getNumFreeSlot() < eq) || (this.chr.get().getInventory(MapleInventoryType.USE).getNumFreeSlot() < use) || (this.chr.get().getInventory(MapleInventoryType.SETUP).getNumFreeSlot() < setup) || (this.chr.get().getInventory(MapleInventoryType.ETC).getNumFreeSlot() < etc) || (this.chr.get().getInventory(MapleInventoryType.CASH).getNumFreeSlot() < cash)) {
                 return 1;
             }
         }

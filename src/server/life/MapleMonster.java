@@ -898,6 +898,8 @@ public class MapleMonster extends AbstractLoadedMapleLife {
                     case IMMUNE:
                     case STRONG:
                         return;
+				default:
+					break;
                 }
                 break;
             }
@@ -906,6 +908,8 @@ public class MapleMonster extends AbstractLoadedMapleLife {
                     case IMMUNE:
                     case STRONG:
                         return;
+				default:
+					break;
                 }
                 break;
             }
@@ -916,6 +920,8 @@ public class MapleMonster extends AbstractLoadedMapleLife {
                     case IMMUNE:
                     case STRONG:
                         return;
+				default:
+					break;
                 }
                 break;
             }

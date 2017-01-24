@@ -1,5 +1,6 @@
 package client;
 
+import client.MapleStat.ZeroStats;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.io.Serializable;
@@ -30,8 +31,6 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.stream.Collectors;
 
-import org.apache.mina.common.WriteFuture;
-
 import client.MapleTrait.MapleTraitType;
 import client.inventory.Equip;
 import client.inventory.Item;
@@ -49,7 +48,6 @@ import client.inventory.MaplePotionPot;
 import client.inventory.MapleRing;
 import constants.GameConstants;
 import constants.MapConstants;
-import constants.ServerConstants;
 import handling.channel.ChannelServer;
 import handling.channel.handler.AttackInfo;
 import handling.channel.handler.PlayerHandler;
@@ -2889,6 +2887,11 @@ public class MapleCharacter extends AnimatedMapleMapObject implements Serializab
         return job;
     }
 
+    public ZeroStats getBetaStats() {
+        int flag = 0;
+        return null;
+    }
+    
     public String getJobName(short id) {
         return MapleJob.getName(MapleJob.getById(id));
     }
@@ -3707,7 +3710,7 @@ public class MapleCharacter extends AnimatedMapleMapObject implements Serializab
                 if (map.isTown() || FieldLimitType.RegularExpLoss.check(map.getFieldLimit())) {
                     diepercentage = 0.01f;
                 } else {
-                    diepercentage = (float) (0.1f - ((traits.get(MapleTraitType.charisma).getLevel() / 20) / 100f) - (stats.expLossReduceR / 100f));
+                    diepercentage = 0.1f - ((traits.get(MapleTraitType.charisma).getLevel() / 20) / 100f) - (stats.expLossReduceR / 100f);
                 }
                 long v10 = (exp - (long) ((double) expforlevel * diepercentage));
                 if (v10 < 0) {
@@ -4052,7 +4055,7 @@ public class MapleCharacter extends AnimatedMapleMapObject implements Serializab
     public final MapleInventory getInventory(MapleInventoryType type) {
         return inventory[type.ordinal()];
     }
-
+    
     public final MapleInventory[] getInventorys() {
         return inventory;
     }
@@ -5466,7 +5469,7 @@ public class MapleCharacter extends AnimatedMapleMapObject implements Serializab
         if (guildid <= 0) {
             return;
         }
-        mgc.setLevel((short) level);
+        mgc.setLevel(level);
         mgc.setJobId(job);
         World.Guild.memberLevelJobUpdate(mgc);
     }
@@ -6709,18 +6712,18 @@ public class MapleCharacter extends AnimatedMapleMapObject implements Serializab
         int total = stats.getStr() + stats.getDex() + stats.getLuk() + stats.getInt() + getRemainingAp();
 
         total -= str;
-        stats.str = (int) str;
+        stats.str = str;
 
         total -= dex;
-        stats.dex = (int) dex;
+        stats.dex = dex;
 
         total -= int_;
-        stats.int_ = (int) int_;
+        stats.int_ = int_;
 
         total -= luk;
-        stats.luk = (int) luk;
+        stats.luk = luk;
 
-        setRemainingAp((int) total);
+        setRemainingAp(total);
         stats.recalcLocalStats(this);
         stat.put(MapleStat.STR, (long) str);
         stat.put(MapleStat.DEX, (long) dex);
@@ -6852,7 +6855,7 @@ public class MapleCharacter extends AnimatedMapleMapObject implements Serializab
     public void expandInventory(byte type, int amount) {
         final MapleInventory inv = getInventory(MapleInventoryType.getByType(type));
         inv.addSlot((byte) amount);
-        client.getSession().write(InventoryPacket.getSlotUpdate(type, (byte) inv.getSlotLimit()));
+        client.getSession().write(InventoryPacket.getSlotUpdate(type, inv.getSlotLimit()));
     }
 
     public boolean allowedToTarget(MapleCharacter other) {
@@ -7046,7 +7049,8 @@ public class MapleCharacter extends AnimatedMapleMapObject implements Serializab
                 default:
                     return;
             }
-            final List<Pair<String, Pair<String, Integer>>> questInfo = MapleQuest.getInstance(questid).getInfoByRank(newRank);
+            @SuppressWarnings("deprecation")
+			final List<Pair<String, Pair<String, Integer>>> questInfo = MapleQuest.getInstance(questid).getInfoByRank(newRank);
             if (questInfo == null) {
                 return;
             }
@@ -7728,7 +7732,7 @@ public class MapleCharacter extends AnimatedMapleMapObject implements Serializab
                         } else {
                             MapleCharacter chr = (MapleCharacter) attacke;
                             chr.addHP(-divineShield.getDamage());
-                            attack.add((int) divineShield.getDamage());
+                            attack.add(divineShield.getDamage());
                         }
                     }
                 }
@@ -7745,7 +7749,7 @@ public class MapleCharacter extends AnimatedMapleMapObject implements Serializab
                         } else {
                             final MapleCharacter attacker = (MapleCharacter) attacke;
                             attacker.addHP(-divineShield.getDamage());
-                            attack.add((int) divineShield.getDamage());
+                            attack.add(divineShield.getDamage());
                         }
                     }
                 }
@@ -7765,7 +7769,7 @@ public class MapleCharacter extends AnimatedMapleMapObject implements Serializab
                         } else {
                             final MapleCharacter attacker = (MapleCharacter) attacke;
                             attacker.addHP(-divineShield.getDamage());
-                            attack.add((int) divineShield.getDamage());
+                            attack.add(divineShield.getDamage());
                         }
                     }
                 }
@@ -7859,7 +7863,7 @@ public class MapleCharacter extends AnimatedMapleMapObject implements Serializab
             addHP(((int) Math.min(maxhp, Math.min(((int) ((double) totDamage * (double) getStatForBuff(MapleBuffStat.ComboDrain).getX() / 100.0)), stats.getMaxHp() / 2))));
         }
         if (getBuffSource(MapleBuffStat.ComboDrain) == 23101003) {
-            addMP(((int) Math.min(maxmp, Math.min(((int) ((double) totDamage * (double) getStatForBuff(MapleBuffStat.ComboDrain).getX() / 100.0)), stats.getMaxMp() / 2))));
+            addMP((Math.min(maxmp, Math.min(((int) ((double) totDamage * (double) getStatForBuff(MapleBuffStat.ComboDrain).getX() / 100.0)), stats.getMaxMp() / 2))));
         }
         if (getBuffedValue(MapleBuffStat.REAPER) != null && getBuffedValue(MapleBuffStat.SUMMON) == null && getSummonsSize() < 4 && canSummon()) {
             final MapleStatEffect eff = getStatForBuff(MapleBuffStat.REAPER);

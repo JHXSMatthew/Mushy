@@ -185,7 +185,7 @@ public class MobHandler {
     }
 
     public static final void RenameFamiliar(LittleEndianAccessor slea, MapleClient c, MapleCharacter chr) {
-        MonsterFamiliar mf = (MonsterFamiliar) c.getPlayer().getFamiliars().get(Integer.valueOf(slea.readInt()));
+        MonsterFamiliar mf = c.getPlayer().getFamiliars().get(Integer.valueOf(slea.readInt()));
         String newName = slea.readMapleAsciiString();
         if ((mf != null) && (mf.getName().equals(mf.getOriginalName())) && (MapleCharacterUtil.isEligibleCharName(newName, false))) {
             mf.setName(newName);
@@ -202,7 +202,7 @@ public class MobHandler {
         c.getSession().write(CWvsContext.enableActions());
         c.getPlayer().removeFamiliar();
         if ((c.getPlayer().getFamiliars().containsKey(Integer.valueOf(mId))) && (slea.readByte() > 0)) {
-            MonsterFamiliar mf = (MonsterFamiliar) c.getPlayer().getFamiliars().get(Integer.valueOf(mId));
+            MonsterFamiliar mf = c.getPlayer().getFamiliars().get(Integer.valueOf(mId));
             if (mf.getFatigue() > 0) {
                 c.getPlayer().dropMessage(1, "Please wait " + mf.getFatigue() + " seconds to summon it.");
             } else {
@@ -317,7 +317,7 @@ public class MobHandler {
         }
         StructFamiliar f = MapleItemInformationProvider.getInstance().getFamiliarByItem(itemId);
         if (MapleLifeFactory.getMonsterStats(f.mob).getLevel() <= c.getPlayer().getLevel()) {
-            MonsterFamiliar mf = (MonsterFamiliar) c.getPlayer().getFamiliars().get(Integer.valueOf(f.familiar));
+            MonsterFamiliar mf = c.getPlayer().getFamiliars().get(Integer.valueOf(f.familiar));
             if (mf != null) {
                 if (mf.getVitality() >= 3) {
                     mf.setExpiry(Math.min(System.currentTimeMillis() + 7776000000L, mf.getExpiry() + 2592000000L));
